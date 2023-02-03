@@ -1,24 +1,19 @@
 package com.book.controller;
 
 import com.book.model.UsersEntity;
-import com.book.repository.UserRepository;
 import com.book.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/register")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RegistrationController {
-    UserService userService;
-
-    @Autowired
-    public RegistrationController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     @PostMapping
     public ResponseEntity<?> registerUser(@RequestBody UsersEntity usersEntity) {
