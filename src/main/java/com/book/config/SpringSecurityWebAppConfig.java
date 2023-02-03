@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -46,8 +47,7 @@ public class SpringSecurityWebAppConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        http.csrf().disable().cors().disable().authorizeHttpRequests()
+        http.csrf().disable().cors().and().authorizeHttpRequests()
                 .requestMatchers("/register").permitAll()
                 .requestMatchers("/login").permitAll()
                 .anyRequest().authenticated()

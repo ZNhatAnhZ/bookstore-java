@@ -23,7 +23,7 @@ public class AuthorizationController {
     private final MyUserDetailsService myUserDetailsService;
 
     @PostMapping
-    public ResponseEntity<?> getJwtToken(@RequestBody UsersEntity usersEntity) throws Exception {
+    public ResponseEntity<JwtModel> getJwtToken(@RequestBody UsersEntity usersEntity) throws Exception {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(usersEntity.getUserName(), usersEntity.getPassword()));
