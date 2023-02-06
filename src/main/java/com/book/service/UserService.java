@@ -31,4 +31,25 @@ public class UserService implements UserServiceInterface{
         return usersEntityOptional;
 
     }
+
+    @Override
+    @Transactional
+    public Optional<UsersEntity> updateUser(UsersEntity usersEntity) {
+        Optional<UsersEntity> usersEntityOptional = userRepository.findUsersEntityByUserName(usersEntity.getUserName());
+        Optional<UsersEntity> result = Optional.empty();
+
+        if(usersEntityOptional.isPresent()){
+            String encryptedPassword = passwordEncoder.encode(usersEntity.getPassword());
+            usersEntityOptional.get().setPassword(encryptedPassword);
+            result = Optional.of(userRepository.save(usersEntityOptional.get()));
+        }
+
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Optional<UsersEntity> getUserByUserName(String userName) {
+        return userRepository.findUsersEntityByUserName(userName);
+    }
 }

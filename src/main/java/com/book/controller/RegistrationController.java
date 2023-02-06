@@ -16,7 +16,7 @@ public class RegistrationController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> registerUser(@RequestBody UsersEntity usersEntity) {
+    public ResponseEntity<String> registerUser(@RequestBody UsersEntity usersEntity) {
         if (userService.registerUser(usersEntity).isEmpty()) {
             return new ResponseEntity<>("User failed to register", HttpStatus.BAD_REQUEST);
         }
