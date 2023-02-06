@@ -17,4 +17,8 @@ public class ProductsService implements ProductsServiceInterface{
     public Optional<List<ProductsEntity>> findAllProducts() {
         return Optional.of(productsRepository.findAll());
     }
+
+    public Optional<ProductsEntity> findProductById(int id) {
+        return productsRepository.findById(id);
+    }
 }

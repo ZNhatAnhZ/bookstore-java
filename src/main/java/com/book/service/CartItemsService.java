@@ -18,4 +18,28 @@ public class CartItemsService implements CartItemsServiceInterface{
     public Optional<List<CartItemsEntity>> getCartItemsEntitiesByUserId(int id) {
         return cartItemsRepository.findCartItemsEntitiesByUserId(id);
     }
+
+    @Override
+    public Boolean saveCartItem(CartItemsEntity cartItemsEntity) {
+        try {
+            cartItemsRepository.save(cartItemsEntity);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Boolean deleteCartItemById(int id) {
+        try {
+            cartItemsRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
