@@ -5,10 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Objects;
-
 @Entity
-@Table(name = "products", schema = "e-commerce", catalog = "")
+@Table(name = "products", schema = "e-commerce")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,9 +15,10 @@ public class ProductsEntity {
     @Id
     @Column(name = "id")
     private int id;
-    @Basic
-    @Column(name = "product_category")
-    private Integer productCategory;
+
+    @ManyToOne
+    @JoinColumn(name = "product_category")
+    private CategoryEntity categoryEntity;
     @Basic
     @Column(name = "product_name")
     private String productName;
@@ -38,17 +37,4 @@ public class ProductsEntity {
     @Basic
     @Column(name = "provider_id")
     private Integer providerId;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProductsEntity that = (ProductsEntity) o;
-        return id == that.id && Objects.equals(productCategory, that.productCategory) && Objects.equals(productName, that.productName) && Objects.equals(productPrice, that.productPrice) && Objects.equals(quantity, that.quantity) && Objects.equals(productDetails, that.productDetails) && Objects.equals(productPhoto, that.productPhoto) && Objects.equals(providerId, that.providerId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, productCategory, productName, productPrice, quantity, productDetails, productPhoto, providerId);
-    }
 }
