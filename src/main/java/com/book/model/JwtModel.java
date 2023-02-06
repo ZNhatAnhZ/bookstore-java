@@ -3,6 +3,11 @@ package com.book.model;
 import lombok.*;
 
 @Data
+@NoArgsConstructor
 public class JwtModel {
-    private final String jwt;
+    private String jwt;
+
+    public JwtModel(String jwt) {
+        this.jwt = jwt;
+    }
 }
