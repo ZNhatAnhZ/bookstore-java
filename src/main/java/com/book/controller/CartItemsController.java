@@ -42,7 +42,7 @@ public class CartItemsController {
         Optional<UsersEntity> usersEntity = userService.getUserByJwtToken(cartItemsDTO.getJwt());
 
         if (usersEntity.isPresent()) {
-            Optional<ProductsEntity> productsEntity = productsService.findProductById(cartItemsDTO.getId());
+            Optional<ProductsEntity> productsEntity = productsService.findProductById(cartItemsDTO.getProductId());
 
             if (productsEntity.isEmpty()) {
                 return new ResponseEntity<>("Failed to add new cart items", HttpStatus.BAD_REQUEST);
@@ -63,7 +63,7 @@ public class CartItemsController {
 
     @PostMapping("/deleteCartItems")
     public ResponseEntity<String> deleteCartItems(@RequestBody CartItemsDTO cartItemsDTO) {
-        if (Boolean.TRUE.equals(cartItemsService.deleteCartItemById(cartItemsDTO.getId()))) {
+        if (Boolean.TRUE.equals(cartItemsService.deleteCartItemById(cartItemsDTO.getProductId()))) {
             return new ResponseEntity<>("Delete cart item successfully", HttpStatus.OK);
         }
 
