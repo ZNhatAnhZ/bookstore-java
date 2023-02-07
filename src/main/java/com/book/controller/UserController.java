@@ -1,6 +1,6 @@
 package com.book.controller;
 
-import com.book.DTO.UserDTO;
+import com.book.dto.UserDTO;
 import com.book.model.JwtModel;
 import com.book.model.UsersEntity;
 import com.book.service.UserService;
@@ -37,10 +37,10 @@ public class UserController {
         String username = jwtUtils.getUserNameFromJwtToken(jwtModel.getJwt());
         Optional<UsersEntity> usersEntity = userService.getUserByUserName(username);
 
-        if (usersEntity.isEmpty()) {
-            return new ResponseEntity<>(usersEntity.get(), HttpStatus.BAD_REQUEST);
+        if (usersEntity.isPresent()) {
+            return new ResponseEntity<>(usersEntity.get(), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(usersEntity.get(), HttpStatus.OK);
+        return new ResponseEntity<>(new UsersEntity(), HttpStatus.BAD_REQUEST);
     }
 }

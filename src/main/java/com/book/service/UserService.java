@@ -2,6 +2,7 @@ package com.book.service;
 
 import com.book.model.UsersEntity;
 import com.book.repository.UserRepository;
+import com.book.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class UserService implements UserServiceInterface{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
     @Override
     @Transactional
@@ -22,7 +24,7 @@ public class UserService implements UserServiceInterface{
         usersEntity.setUserType("user");
         Optional<UsersEntity> usersEntityOptional = Optional.empty();
 
-        if(!userRepository.existsByUserName(usersEntity.getUserName())){
+        if(Boolean.FALSE.equals(userRepository.existsByUserName(usersEntity.getUserName()))){
             String encryptedPassword = passwordEncoder.encode(usersEntity.getPassword());
             usersEntity.setPassword(encryptedPassword);
             usersEntityOptional = Optional.of(userRepository.save(usersEntity));
@@ -51,5 +53,11 @@ public class UserService implements UserServiceInterface{
     @Transactional
     public Optional<UsersEntity> getUserByUserName(String userName) {
         return userRepository.findUsersEntityByUserName(userName);
+    }
+
+    @Override
+    @Transactional
+    public Optional<UsersEntity> getUserByJwtToken(String jwt) {
+        return userRepository.findUsersEntityByUserName(jwtUtils.getUserNameFromJwtToken(jwt));
     }
 }
