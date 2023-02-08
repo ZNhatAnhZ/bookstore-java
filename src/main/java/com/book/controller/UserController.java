@@ -1,7 +1,7 @@
 package com.book.controller;
 
 import com.book.dto.UserDTO;
-import com.book.model.JwtModel;
+import com.book.dto.JwtModel;
 import com.book.model.UsersEntity;
 import com.book.service.UserService;
 import com.book.util.JwtUtils;

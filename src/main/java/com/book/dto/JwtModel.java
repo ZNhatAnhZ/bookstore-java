@@ -1,4 +1,4 @@
-package com.book.model;
+package com.book.dto;
 
 import lombok.*;
 
