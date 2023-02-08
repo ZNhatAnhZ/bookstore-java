@@ -12,5 +12,6 @@ public interface ProductsServiceInterface {
     Optional<Page<ProductsEntity>> findAllProductsSortedByPriceAsc(int page, int size);
     Optional<Page<ProductsEntity>> findAllProductsSortedByPriceDesc(int page, int size);
     Optional<Page<ProductsEntity>> findAllProductsSortedByOrderItemsCount(int page, int size);
+    Optional<Page<ProductsEntity>> findAllProductsOfCategory(int page, int size, String category);
     Optional<ProductsEntity> findProductById(int id);
 }

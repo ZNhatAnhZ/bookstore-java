@@ -38,4 +38,32 @@ public class ProductsController {
 
         return new ResponseEntity<>(productsDTO, HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping("/getProductsByCategory")
+    public ResponseEntity<ProductsDTO> getProductsByCategory(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "15") int size, @RequestParam String categoryName) {
+        Optional<Page<ProductsEntity>> result = productsService.findAllProductsOfCategory(page, size, categoryName);
+        ProductsDTO productsDTO = new ProductsDTO();
+
+        if (result.isPresent()) {
+            productsDTO.setProductsEntityList(result.get().toList());
+            productsDTO.setCurrentPage(result.get().getNumber());
+            productsDTO.setTotalPages(result.get().getTotalPages());
+            productsDTO.setTotalItems(result.get().getTotalElements());
+
+            return new ResponseEntity<>(productsDTO, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(productsDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/getProductById")
+    public ResponseEntity<ProductsEntity> getProductById(@RequestParam int id) {
+        Optional<ProductsEntity> result = productsService.findProductById(id);
+
+        if (result.isPresent()) {
+            return new ResponseEntity<>(result.get(), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(new ProductsEntity(), HttpStatus.BAD_REQUEST);
+    }
 }
