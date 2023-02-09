@@ -65,4 +65,9 @@ public class ProductReviewsService implements ProductReviewsServiceInterface{
 
         return false;
     }
+
+    @Override
+    public Optional<List<ProductReviewsEntity>> findAll() {
+        return Optional.of(productReviewsRepository.findAll());
+    }
 }

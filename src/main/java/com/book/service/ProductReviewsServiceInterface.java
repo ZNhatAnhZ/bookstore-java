@@ -10,4 +10,5 @@ public interface ProductReviewsServiceInterface {
     Optional<List<ProductReviewsEntity>> findAllByProductId(int productsEntityId);
     Boolean saveProductReview(ProductReviewDTO productReviewDTO);
     Optional<Integer> getAverageRatingByProductId(int productsEntityId);
+    Optional<List<ProductReviewsEntity>> findAll();
 }
