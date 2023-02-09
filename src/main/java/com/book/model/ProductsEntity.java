@@ -15,7 +15,6 @@ public class ProductsEntity {
     @Id
     @Column(name = "id")
     private int id;
-
     @ManyToOne
     @JoinColumn(name = "product_category")
     private CategoryEntity categoryEntity;
