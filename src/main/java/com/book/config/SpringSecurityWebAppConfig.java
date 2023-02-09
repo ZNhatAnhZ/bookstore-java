@@ -51,6 +51,8 @@ public class SpringSecurityWebAppConfig {
                 .requestMatchers("/login/**").permitAll()
                 .requestMatchers("/product/**").permitAll()
                 .requestMatchers("/category/**").permitAll()
+                .requestMatchers("/productReview/getProductReviewByProductId").permitAll()
+                .requestMatchers("/productReview/getAverageRating").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @Table(name = "users", schema = "e-commerce", catalog = "")
 @Getter
@@ -28,7 +26,4 @@ public class UsersEntity {
     @Basic
     @Column(name = "password")
     private String password;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private List<CartItemsEntity> cartItemsEntityList;
 }
