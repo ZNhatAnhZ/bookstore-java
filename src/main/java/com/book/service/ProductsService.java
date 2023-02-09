@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +19,14 @@ import java.util.Optional;
 public class ProductsService implements ProductsServiceInterface{
     private final ProductsRepository productsRepository;
 
+    @Override
+    @Transactional
     public Optional<Page<ProductsEntity>> findAllProducts(int page, int size) {
         return Optional.of(productsRepository.findAll(PageRequest.of(page, size)));
     }
 
     @Override
+    @Transactional
     public Optional<Page<ProductsEntity>> findAllProductsBySort(int page, int size, String sort) {
         Optional<Page<ProductsEntity>> result;
         switch (sort) {
@@ -36,25 +40,31 @@ public class ProductsService implements ProductsServiceInterface{
     }
 
     @Override
+    @Transactional
     public Optional<Page<ProductsEntity>> findAllProductsSortedByIdDesc(int page, int size) {
         return Optional.of(productsRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending())));
     }
 
     @Override
+    @Transactional
     public Optional<Page<ProductsEntity>> findAllProductsSortedByPriceAsc(int page, int size) {
         return Optional.of(productsRepository.findAll(PageRequest.of(page, size, Sort.by("productPrice").ascending())));
     }
 
     @Override
+    @Transactional
     public Optional<Page<ProductsEntity>> findAllProductsSortedByPriceDesc(int page, int size) {
         return Optional.of(productsRepository.findAll(PageRequest.of(page, size, Sort.by("productPrice").descending())));
     }
 
     @Override
+    @Transactional
     public Optional<Page<ProductsEntity>> findAllProductsSortedByOrderItemsCount(int page, int size) {
         return Optional.of(productsRepository.findAllByTotalSold(PageRequest.of(page, size)));
     }
 
+    @Override
+    @Transactional
     public Optional<ProductsEntity> findProductById(int id) {
         return productsRepository.findById(id);
     }

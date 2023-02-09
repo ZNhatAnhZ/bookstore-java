@@ -1,5 +1,6 @@
 package com.book.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Table(name = "products", schema = "e-commerce")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @NoArgsConstructor
 public class ProductsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
