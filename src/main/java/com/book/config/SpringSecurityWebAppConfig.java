@@ -50,6 +50,7 @@ public class SpringSecurityWebAppConfig {
                 .requestMatchers("/register/**").permitAll()
                 .requestMatchers("/login/**").permitAll()
                 .requestMatchers("/product/**").permitAll()
+                .requestMatchers("/category/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

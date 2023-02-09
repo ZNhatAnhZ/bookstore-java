@@ -12,4 +12,5 @@ public interface ProductsRepository extends JpaRepository<ProductsEntity, Intege
             countQuery = "select count(*) from products",
             nativeQuery = true)
     Page<ProductsEntity> findAllByTotalSold(Pageable pageable);
+    Page<ProductsEntity> findAllByCategoryEntityId(int id, Pageable pageable);
 }

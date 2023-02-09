@@ -35,7 +35,7 @@ public class ProductsEntity {
     @Basic
     @Column(name = "product_photo")
     private String productPhoto;
-    @Basic
-    @Column(name = "provider_id")
-    private Integer providerId;
+    @ManyToOne
+    @JoinColumn(name = "provider_id")
+    private UsersEntity usersEntity;
 }

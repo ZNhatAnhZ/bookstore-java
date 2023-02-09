@@ -31,7 +31,4 @@ public class UsersEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<CartItemsEntity> cartItemsEntityList;
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "provider_id")
-    private List<ProductsEntity> productsEntityList;
 }

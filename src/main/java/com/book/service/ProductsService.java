@@ -1,5 +1,6 @@
 package com.book.service;
 
+import com.book.model.CategoryEntity;
 import com.book.model.ProductsEntity;
 import com.book.repository.ProductsRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ProductsService implements ProductsServiceInterface{
     private final ProductsRepository productsRepository;
+    private final CategoryService categoryService;
 
     @Override
     @Transactional
@@ -61,6 +63,18 @@ public class ProductsService implements ProductsServiceInterface{
     @Transactional
     public Optional<Page<ProductsEntity>> findAllProductsSortedByOrderItemsCount(int page, int size) {
         return Optional.of(productsRepository.findAllByTotalSold(PageRequest.of(page, size)));
+    }
+
+    @Override
+    @Transactional
+    public Optional<Page<ProductsEntity>> findAllProductsOfCategory(int page, int size, String category) {
+        Optional<CategoryEntity> categoryEntity = categoryService.findCategoryEntityByCategoryName(category);
+
+        if (categoryEntity.isPresent()) {
+            return Optional.of(productsRepository.findAllByCategoryEntityId(categoryEntity.get().getId(), PageRequest.of(page, size)));
+        }
+
+        return Optional.empty();
     }
 
     @Override
