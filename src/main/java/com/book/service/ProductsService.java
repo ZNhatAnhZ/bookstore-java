@@ -82,4 +82,10 @@ public class ProductsService implements ProductsServiceInterface{
     public Optional<ProductsEntity> findProductById(int id) {
         return productsRepository.findById(id);
     }
+
+    @Override
+    @Transactional
+    public Optional<Page<ProductsEntity>> findAllByProductNameContainingIgnoreCase(int page, int size, String productName) {
+        return Optional.ofNullable(productsRepository.findAllByProductNameContainingIgnoreCase(PageRequest.of(page, size), productName));
+    }
 }

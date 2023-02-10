@@ -13,4 +13,5 @@ public interface ProductsRepository extends JpaRepository<ProductsEntity, Intege
             nativeQuery = true)
     Page<ProductsEntity> findAllByTotalSold(Pageable pageable);
     Page<ProductsEntity> findAllByCategoryEntityId(int id, Pageable pageable);
+    Page<ProductsEntity> findAllByProductNameContainingIgnoreCase(Pageable pageable, String productName);
 }
