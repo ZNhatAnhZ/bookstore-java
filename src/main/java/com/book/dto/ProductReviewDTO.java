@@ -6,5 +6,5 @@ import lombok.Data;
 public class ProductReviewDTO extends JwtModel{
     private final String comment;
     private final Integer rating;
-    private final int productId;
+    private final Integer productId;
 }

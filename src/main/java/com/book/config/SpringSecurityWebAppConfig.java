@@ -50,6 +50,8 @@ public class SpringSecurityWebAppConfig {
                 .requestMatchers("/product/getProductsByProviderId").authenticated()
                 .requestMatchers("/product/getRecommendedProducts").authenticated()
                 .requestMatchers("/product/createProduct").authenticated()
+                .requestMatchers("/product/modifyProduct").authenticated()
+                .requestMatchers("/product/deleteProduct").authenticated()
                 .requestMatchers("/productReview/addProductReview").authenticated()
                 .requestMatchers("/register/**").permitAll()
                 .requestMatchers("/login/**").permitAll()

@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class NewProductDTO extends JwtModel{
-    private int productId;
+    private Integer productId;
     private String categoryName;
     private String productName;
-    private int productPrice;
-    private int quantity;
+    private Integer productPrice;
+    private Integer quantity;
     private String productPhoto;
     private String productDetails;
 }
