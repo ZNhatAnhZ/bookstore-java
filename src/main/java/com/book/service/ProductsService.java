@@ -10,6 +10,7 @@ import com.book.repository.ProductsRepository;
 import com.book.util.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class ProductsService implements ProductsServiceInterface{
     private final ProductsRepository productsRepository;
     private final CategoryService categoryService;
@@ -161,7 +163,7 @@ public class ProductsService implements ProductsServiceInterface{
                 productsRepository.save(productsEntity);
                 return true;
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("", e);
             }
         }
 
@@ -196,7 +198,7 @@ public class ProductsService implements ProductsServiceInterface{
                 productsRepository.save(existProductsEntity.get());
                 return true;
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("", e);
             }
         }
 
@@ -210,7 +212,7 @@ public class ProductsService implements ProductsServiceInterface{
             productsRepository.deleteById(newProductDTO.getProductId());
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
 
         return false;
