@@ -1,18 +1,19 @@
 package com.book.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
-import java.util.Objects;
 
 @Entity
-@Table(name = "product_reviews", schema = "e-commerce", catalog = "")
+@Table(name = "product_reviews", schema = "e-commerce")
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class ProductReviewsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -20,10 +21,10 @@ public class ProductReviewsEntity {
     private int id;
     @Basic
     @Column(name = "review_product_id")
-    private Integer reviewProductId;
-    @Basic
-    @Column(name = "review_by")
-    private Integer reviewBy;
+    private Integer productId;
+    @OneToOne
+    @JoinColumn(name = "review_by")
+    private UsersEntity usersEntity;
     @Basic
     @Column(name = "rating")
     private Integer rating;
@@ -33,17 +34,4 @@ public class ProductReviewsEntity {
     @Basic
     @Column(name = "review_date")
     private Date reviewDate;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProductReviewsEntity that = (ProductReviewsEntity) o;
-        return id == that.id && Objects.equals(reviewProductId, that.reviewProductId) && Objects.equals(reviewBy, that.reviewBy) && Objects.equals(rating, that.rating) && Objects.equals(comment, that.comment) && Objects.equals(reviewDate, that.reviewDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, reviewProductId, reviewBy, rating, comment, reviewDate);
-    }
 }
