@@ -4,6 +4,7 @@ import com.book.model.ProductsEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -18,4 +19,7 @@ public interface ProductsRepository extends JpaRepository<ProductsEntity, Intege
     Page<ProductsEntity> findAllByCategoryEntityId(int id, Pageable pageable);
     Page<ProductsEntity> findAllByProductNameContainingIgnoreCase(Pageable pageable, String productName);
     Optional<List<ProductsEntity>> findAllByUsersEntityId(int usersEntityId);
+    @Modifying
+    @Query(value = "delete from ProductsEntity p where p.id = :id")
+    void deleteProductsEntityById(int id);
 }

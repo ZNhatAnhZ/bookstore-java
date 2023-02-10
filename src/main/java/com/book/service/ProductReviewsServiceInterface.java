@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ProductReviewsServiceInterface {
     Optional<List<ProductReviewsEntity>> findAllByProductId(int productsEntityId);
-    Boolean saveProductReview(ProductReviewDTO productReviewDTO);
+    Boolean saveProductReview(String authHeader, ProductReviewDTO productReviewDTO);
     Optional<Integer> getAverageRatingByProductId(int productsEntityId);
     Optional<List<ProductReviewsEntity>> findAll();
 }

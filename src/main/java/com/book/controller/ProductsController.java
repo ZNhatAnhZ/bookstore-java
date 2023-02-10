@@ -76,8 +76,8 @@ public class ProductsController {
     }
 
     @PostMapping("/createProduct")
-    public ResponseEntity<String> createProduct(@RequestBody NewProductDTO newProductDTO) {
-        Boolean result = productsService.createProduct(newProductDTO);
+    public ResponseEntity<String> createProduct(@RequestHeader(name = "Authorization") String authHeader, @RequestBody NewProductDTO newProductDTO) {
+        Boolean result = productsService.createProduct(authHeader, newProductDTO);
 
         if (Boolean.TRUE.equals(result)) {
             return new ResponseEntity<>("Created a new product successfully", HttpStatus.OK);

@@ -1,6 +1,5 @@
 package com.book.service;
 
-import com.book.dto.JwtModel;
 import com.book.dto.OrdersDTO;
 import com.book.model.CartItemsEntity;
 import com.book.model.OrdersEntity;
@@ -33,8 +32,8 @@ public class OrdersService implements OrdersServiceInterface{
     private final ProductsService productsService;
     @Override
     @Transactional
-    public Boolean createOrderFromCart(JwtModel jwtModel) {
-        Optional<UsersEntity> usersEntity = userService.getUserByUserName(jwtUtils.getUserNameFromJwtToken(jwtModel.getJwt()));
+    public Boolean createOrderFromCart(String authHeader) {
+        Optional<UsersEntity> usersEntity = userService.getUserByJwtToken(authHeader.substring(7));
 
         if (usersEntity.isPresent()) {
             OrdersEntity ordersEntity = new OrdersEntity();
@@ -67,8 +66,8 @@ public class OrdersService implements OrdersServiceInterface{
 
     @Override
     @Transactional
-    public Boolean createOrderFromProductId(OrdersDTO ordersDTO) {
-        Optional<UsersEntity> usersEntity = userService.getUserByUserName(jwtUtils.getUserNameFromJwtToken(ordersDTO.getJwt()));
+    public Boolean createOrderFromProductId(String authHeader, OrdersDTO ordersDTO) {
+        Optional<UsersEntity> usersEntity = userService.getUserByJwtToken(authHeader.substring(7));
         Optional<ProductsEntity> productsEntity = productsService.findProductById(ordersDTO.getProductId());
 
         if (usersEntity.isPresent() && productsEntity.isPresent()) {

@@ -2,8 +2,6 @@ package com.book.controller;
 
 import com.book.dto.CartItemsDTO;
 import com.book.model.CartItemsEntity;
-import com.book.model.ProductsEntity;
-import com.book.model.UsersEntity;
 import com.book.service.CartItemsService;
 import com.book.service.ProductsService;
 import com.book.service.UserService;
@@ -36,24 +34,9 @@ public class CartItemsController {
     }
 
     @PostMapping("/addCartItems")
-    public ResponseEntity<String> addCartItems(@RequestBody CartItemsDTO cartItemsDTO) {
-        Optional<UsersEntity> usersEntity = userService.getUserByJwtToken(cartItemsDTO.getJwt());
-
-        if (usersEntity.isPresent()) {
-            Optional<ProductsEntity> productsEntity = productsService.findProductById(cartItemsDTO.getProductId());
-
-            if (productsEntity.isEmpty()) {
-                return new ResponseEntity<>("Failed to add new cart items", HttpStatus.BAD_REQUEST);
-            }
-
-            CartItemsEntity cartItemsEntity = new CartItemsEntity();
-            cartItemsEntity.setUserId(usersEntity.get().getId());
-            cartItemsEntity.setProductsEntity(productsEntity.get());
-            cartItemsEntity.setQuantity(cartItemsDTO.getQuantity());
-
-            if (Boolean.TRUE.equals(cartItemsService.saveCartItem(cartItemsEntity))) {
-                return new ResponseEntity<>("Adding new cart items is successful", HttpStatus.OK);
-            }
+    public ResponseEntity<String> addCartItems(@RequestHeader(name = "Authorization") String authHeader, @RequestBody CartItemsDTO cartItemsDTO) {
+        if (Boolean.TRUE.equals(cartItemsService.saveCartItem(authHeader, cartItemsDTO))) {
+            return new ResponseEntity<>("Adding new cart items is successful", HttpStatus.OK);
         }
 
         return new ResponseEntity<>("Failed to add new cart items", HttpStatus.BAD_REQUEST);

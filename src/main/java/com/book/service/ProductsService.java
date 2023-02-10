@@ -138,8 +138,8 @@ public class ProductsService implements ProductsServiceInterface{
 
     @Override
     @Transactional
-    public Boolean createProduct(NewProductDTO newProductDTO) {
-        Optional<UsersEntity> usersEntity = userService.getUserByUserName(jwtUtils.getUserNameFromJwtToken(newProductDTO.getJwt()));
+    public Boolean createProduct(String authHeader, NewProductDTO newProductDTO) {
+        Optional<UsersEntity> usersEntity = userService.getUserByJwtToken(authHeader.substring(7));
         Optional<CategoryEntity> existCategoryEntity = categoryService.findCategoryEntityByCategoryName(newProductDTO.getCategoryName());
         if (usersEntity.isPresent()) {
             CategoryEntity categoryEntity = new CategoryEntity();

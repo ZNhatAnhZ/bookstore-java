@@ -44,7 +44,7 @@ public interface ProductsServiceInterface {
     Optional<List<ProductsEntity>> findAllByUsersEntityId(int usersEntityId);
 
     @Transactional
-    Boolean createProduct(NewProductDTO newProductDTO);
+    Boolean createProduct(String authHeader, NewProductDTO newProductDTO);
 
     @Transactional
     Boolean modifyProduct(NewProductDTO newProductDTO);
