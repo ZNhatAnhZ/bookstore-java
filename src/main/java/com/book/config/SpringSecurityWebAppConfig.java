@@ -47,12 +47,15 @@ public class SpringSecurityWebAppConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().cors().and().authorizeHttpRequests()
+                .requestMatchers("/product/getProductsByProviderId").authenticated()
+                .requestMatchers("/product/getRecommendedProducts").authenticated()
+                .requestMatchers("/product/createProduct").authenticated()
+                .requestMatchers("/productReview/addProductReview").authenticated()
                 .requestMatchers("/register/**").permitAll()
                 .requestMatchers("/login/**").permitAll()
                 .requestMatchers("/product/**").permitAll()
                 .requestMatchers("/category/**").permitAll()
-                .requestMatchers("/productReview/getProductReviewByProductId").permitAll()
-                .requestMatchers("/productReview/getAverageRating").permitAll()
+                .requestMatchers("/productReview/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

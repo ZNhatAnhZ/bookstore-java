@@ -17,7 +17,7 @@ public class ProductsEntity {
     @Id
     @Column(name = "id")
     private int id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_category")
     private CategoryEntity categoryEntity;
     @Basic

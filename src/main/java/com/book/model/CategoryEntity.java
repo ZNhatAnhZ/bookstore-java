@@ -18,6 +18,6 @@ public class CategoryEntity {
     @Column(name = "id")
     private int id;
     @Basic
-    @Column(name = "category_name")
+    @Column(name = "category_name", unique = true)
     private String categoryName;
 }

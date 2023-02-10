@@ -1,5 +1,6 @@
 package com.book.controller;
 
+import com.book.dto.NewProductDTO;
 import com.book.dto.ProductsDTO;
 import com.book.model.ProductsEntity;
 import com.book.service.ProductsService;
@@ -61,6 +62,28 @@ public class ProductsController {
         }
 
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/getProductsByProviderId")
+    public ResponseEntity<List<ProductsEntity>> getProductsByProviderId(@RequestParam int providerId) {
+        Optional<List<ProductsEntity>> result = productsService.findAllByUsersEntityId(providerId);
+
+        if (result.isPresent()) {
+            return new ResponseEntity<>(result.get(), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/createProduct")
+    public ResponseEntity<String> createProduct(@RequestBody NewProductDTO newProductDTO) {
+        Boolean result = productsService.createProduct(newProductDTO);
+
+        if (Boolean.TRUE.equals(result)) {
+            return new ResponseEntity<>("Created a new product successfully", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Failed to create a new product", HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<ProductsDTO> getProductsDTOResponseEntity(Optional<Page<ProductsEntity>> result) {

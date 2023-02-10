@@ -1,7 +1,9 @@
 package com.book.service;
 
+import com.book.dto.NewProductDTO;
 import com.book.model.ProductsEntity;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,4 +20,10 @@ public interface ProductsServiceInterface {
     Optional<ProductsEntity> findProductById(int id);
     Optional<Page<ProductsEntity>> findAllByProductNameContainingIgnoreCase(int page, int size, String productName);
     Optional<List<ProductsEntity>> getRecommendedProducts(int userId) throws IOException;
+
+    @Transactional
+    Optional<List<ProductsEntity>> findAllByUsersEntityId(int usersEntityId);
+
+    @Transactional
+    Boolean createProduct(NewProductDTO newProductDTO);
 }
