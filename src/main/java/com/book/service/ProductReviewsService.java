@@ -31,7 +31,7 @@ public class ProductReviewsService implements ProductReviewsServiceInterface{
     @Override
     public Optional<Integer> getAverageRatingByProductId(int productsEntityId) {
         List<ProductReviewsEntity> productReviewsEntityList = productReviewsRepository.findAllByProductId(productsEntityId);
-        if (productReviewsEntityList.size() > 0) {
+        if (!productReviewsEntityList.isEmpty()) {
             AtomicInteger result = new AtomicInteger();
             productReviewsEntityList.stream().forEach(e -> result.addAndGet(e.getRating()));
             result.getAndUpdate(v -> v / productReviewsEntityList.size());
