@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class ProductsDTO {
     private List<ProductsEntity> productsEntityList;
-    private int currentPage;
+    private Integer currentPage;
     private long totalItems;
-    private int totalPages;
+    private Integer totalPages;
 }

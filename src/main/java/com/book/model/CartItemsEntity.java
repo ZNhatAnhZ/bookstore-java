@@ -21,7 +21,7 @@ public class CartItemsEntity {
     @Basic
     @Column(name = "user_id")
     private Integer userId;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private ProductsEntity productsEntity;
     @Basic

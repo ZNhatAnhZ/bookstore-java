@@ -1,10 +1,13 @@
 package com.book.service;
 
 import com.book.dto.RatingObjectDTO;
+import com.book.dto.NewProductDTO;
 import com.book.model.CategoryEntity;
 import com.book.model.ProductReviewsEntity;
 import com.book.model.ProductsEntity;
+import com.book.model.UsersEntity;
 import com.book.repository.ProductsRepository;
+import com.book.util.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,8 @@ public class ProductsService implements ProductsServiceInterface{
     private final ProductsRepository productsRepository;
     private final CategoryService categoryService;
     private final ProductReviewsService productReviewsService;
+    private final JwtUtils jwtUtils;
+    private final UserService userService;
     @Value("${pythonInterpreter}")
     private String pythonInterpreter;
     @Value("${pythonProgramLocation}")
@@ -121,5 +126,93 @@ public class ProductsService implements ProductsServiceInterface{
         BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
         List<Integer> productIdList = new ObjectMapper().readValue(in.readLine(), List.class);
         return Optional.of(productsRepository.findAllById(productIdList));
+    }
+
+    @Override
+    @Transactional
+    public Optional<List<ProductsEntity>> findAllByUsersEntityId(int usersEntityId) {
+        return productsRepository.findAllByUsersEntityId(usersEntityId);
+    }
+
+    @Override
+    @Transactional
+    public Boolean createProduct(NewProductDTO newProductDTO) {
+        Optional<UsersEntity> usersEntity = userService.getUserByUserName(jwtUtils.getUserNameFromJwtToken(newProductDTO.getJwt()));
+        Optional<CategoryEntity> existCategoryEntity = categoryService.findCategoryEntityByCategoryName(newProductDTO.getCategoryName());
+        if (usersEntity.isPresent()) {
+            CategoryEntity categoryEntity = new CategoryEntity();
+
+            if (existCategoryEntity.isEmpty()) {
+                categoryEntity.setCategoryName(newProductDTO.getCategoryName());
+            } else {
+                categoryEntity = existCategoryEntity.get();
+            }
+
+            ProductsEntity productsEntity = new ProductsEntity();
+            productsEntity.setQuantity(newProductDTO.getQuantity());
+            productsEntity.setProductDetails(newProductDTO.getProductDetails());
+            productsEntity.setProductPhoto(newProductDTO.getProductPhoto());
+            productsEntity.setProductName(newProductDTO.getProductName());
+            productsEntity.setProductPrice(newProductDTO.getProductPrice());
+            productsEntity.setCategoryEntity(categoryEntity);
+            productsEntity.setUsersEntity(usersEntity.get());
+
+            try {
+                productsRepository.save(productsEntity);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public Boolean modifyProduct(NewProductDTO newProductDTO) {
+        Optional<CategoryEntity> existCategoryEntity = categoryService.findCategoryEntityByCategoryName(newProductDTO.getCategoryName());
+        Optional<ProductsEntity> existProductsEntity = productsRepository.findById(newProductDTO.getProductId());
+
+        if (existProductsEntity.isPresent()) {
+            CategoryEntity categoryEntity = new CategoryEntity();
+
+            if (existCategoryEntity.isEmpty()) {
+                categoryEntity.setCategoryName(newProductDTO.getCategoryName());
+            } else {
+                categoryEntity = existCategoryEntity.get();
+            }
+
+            if (newProductDTO.getQuantity() != null && newProductDTO.getProductDetails() != null && newProductDTO.getProductPhoto() != null && newProductDTO.getProductName() != null && newProductDTO.getProductPrice() != null) {
+                existProductsEntity.get().setQuantity(newProductDTO.getQuantity());
+                existProductsEntity.get().setProductDetails(newProductDTO.getProductDetails());
+                existProductsEntity.get().setProductPhoto(newProductDTO.getProductPhoto());
+                existProductsEntity.get().setProductName(newProductDTO.getProductName());
+                existProductsEntity.get().setProductPrice(newProductDTO.getProductPrice());
+                existProductsEntity.get().setCategoryEntity(categoryEntity);
+            }
+
+            try {
+                productsRepository.save(existProductsEntity.get());
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public Boolean deleteProduct(NewProductDTO newProductDTO) {
+        try {
+            productsRepository.deleteById(newProductDTO.getProductId());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

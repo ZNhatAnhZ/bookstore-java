@@ -86,6 +86,28 @@ public class ProductsController {
         return new ResponseEntity<>("Failed to create a new product", HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping("/modifyProduct")
+    public ResponseEntity<String> modifyProduct(@RequestBody NewProductDTO newProductDTO) {
+        Boolean result = productsService.modifyProduct(newProductDTO);
+
+        if (Boolean.TRUE.equals(result)) {
+            return new ResponseEntity<>("Modified a product successfully", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Failed to modify a product", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/deleteProduct")
+    public ResponseEntity<String> deleteProduct(@RequestBody NewProductDTO newProductDTO) {
+        Boolean result = productsService.deleteProduct(newProductDTO);
+
+        if (Boolean.TRUE.equals(result)) {
+            return new ResponseEntity<>("Deleted a product successfully", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Failed to delete a product", HttpStatus.BAD_REQUEST);
+    }
+
     private ResponseEntity<ProductsDTO> getProductsDTOResponseEntity(Optional<Page<ProductsEntity>> result) {
         ProductsDTO productsDTO = new ProductsDTO();
 
