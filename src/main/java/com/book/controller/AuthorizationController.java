@@ -5,6 +5,7 @@ import com.book.model.UsersEntity;
 import com.book.service.MyUserDetailsService;
 import com.book.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/login")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class AuthorizationController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
@@ -28,7 +30,7 @@ public class AuthorizationController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(usersEntity.getUserName(), usersEntity.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Incorrect username or password", e);
+            log.error("Incorrect username or password", e);
         }
 
         UserDetails userDetails = myUserDetailsService.loadUserByUsername(usersEntity.getUserName());

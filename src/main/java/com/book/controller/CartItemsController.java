@@ -7,7 +7,6 @@ import com.book.model.UsersEntity;
 import com.book.service.CartItemsService;
 import com.book.service.ProductsService;
 import com.book.service.UserService;
-import com.book.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CartItemsController {
     private final CartItemsService cartItemsService;
-    private final JwtUtils jwtUtils;
     private final UserService userService;
     private final ProductsService productsService;
 

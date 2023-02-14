@@ -3,6 +3,7 @@ package com.book.service;
 import com.book.model.CartItemsEntity;
 import com.book.repository.CartItemsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class CartItemsService implements CartItemsServiceInterface{
     private final CartItemsRepository cartItemsRepository;
 
@@ -28,7 +30,7 @@ public class CartItemsService implements CartItemsServiceInterface{
             cartItemsRepository.save(cartItemsEntity);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
 
         return false;
@@ -41,7 +43,7 @@ public class CartItemsService implements CartItemsServiceInterface{
             cartItemsRepository.deleteById(id);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
 
         return false;
@@ -54,7 +56,7 @@ public class CartItemsService implements CartItemsServiceInterface{
             cartItemsRepository.deleteAll(cartItemsEntityList);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
 
         return false;

@@ -7,6 +7,7 @@ import com.book.model.OrdersEntity;
 import com.book.model.ProductsEntity;
 import com.book.repository.OrderItemsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +20,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class OrderItemsService implements OrderItemsServiceInterface{
     private final OrderItemsRepository orderItemsRepository;
     private final CartItemsService cartItemsService;
-
     @Override
     @Transactional
     public Boolean createOrderItemsEntityByCartItemEntityList(OrdersEntity ordersEntity, List<CartItemsEntity> cartItemsEntityList) throws InvalidQuantityException {
@@ -49,7 +50,7 @@ public class OrderItemsService implements OrderItemsServiceInterface{
 
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
 
         return false;
@@ -73,7 +74,7 @@ public class OrderItemsService implements OrderItemsServiceInterface{
             orderItemsRepository.save(orderItemsEntity);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
 
         return false;
