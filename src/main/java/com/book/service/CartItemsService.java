@@ -1,6 +1,9 @@
 package com.book.service;
 
+import com.book.dto.CartItemsDTO;
 import com.book.model.CartItemsEntity;
+import com.book.model.ProductsEntity;
+import com.book.model.UsersEntity;
 import com.book.repository.CartItemsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,8 @@ import java.util.Optional;
 @Slf4j
 public class CartItemsService implements CartItemsServiceInterface{
     private final CartItemsRepository cartItemsRepository;
+    private final UserService userService;
+    private final ProductsService productsService;
 
     @Override
     @Transactional
@@ -25,14 +30,27 @@ public class CartItemsService implements CartItemsServiceInterface{
 
     @Override
     @Transactional
-    public Boolean saveCartItem(CartItemsEntity cartItemsEntity) {
+    public Boolean saveCartItem(String authHeader, CartItemsDTO cartItemsDTO) {
+        Optional<UsersEntity> usersEntity = userService.getUserByJwtToken(authHeader.substring(7));
+
+        if (usersEntity.isPresent()) {
+            Optional<ProductsEntity> productsEntity = productsService.findProductById(cartItemsDTO.getProductId());
+
+            if (productsEntity.isEmpty()) {
+                return false;
+            }
+
+            CartItemsEntity cartItemsEntity = new CartItemsEntity();
+            cartItemsEntity.setUserId(usersEntity.get().getId());
+            cartItemsEntity.setProductsEntity(productsEntity.get());
+            cartItemsEntity.setQuantity(cartItemsDTO.getQuantity());
         try {
             cartItemsRepository.save(cartItemsEntity);
             return true;
         } catch (Exception e) {
             log.error("", e);
         }
-
+    }
         return false;
     }
 

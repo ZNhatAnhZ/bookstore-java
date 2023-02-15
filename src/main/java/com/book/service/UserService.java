@@ -1,5 +1,6 @@
 package com.book.service;
 
+import com.book.dto.UserDTO;
 import com.book.model.UsersEntity;
 import com.book.repository.UserRepository;
 import com.book.util.JwtUtils;
@@ -46,28 +47,22 @@ public class UserService implements UserServiceInterface{
 
     @Override
     @Transactional
-    public Optional<UsersEntity> updateUser(UsersEntity usersEntity) {
-        Optional<UsersEntity> usersEntityOptional = userRepository.findUsersEntityByUserName(usersEntity.getUserName());
-        Optional<UsersEntity> result = Optional.empty();
+    public Boolean changePassword(String authHeader, UserDTO userDTO) {
+        Optional<UsersEntity> usersEntity = getUserByJwtToken(authHeader.substring(7));
 
-        if(usersEntityOptional.isPresent()){
-            String encryptedPassword = passwordEncoder.encode(usersEntity.getPassword());
-            usersEntityOptional.get().setPassword(encryptedPassword);
-
-            try {
-                result = Optional.of(userRepository.save(usersEntityOptional.get()));
-            } catch (Exception e) {
-                log.error("", e);
+        if(usersEntity.isPresent()){
+            if (passwordEncoder.matches(userDTO.getPassword(), usersEntity.get().getPassword())) {
+                try {
+                    usersEntity.get().setPassword(passwordEncoder.encode(userDTO.getNewPassword()));
+                    userRepository.save(usersEntity.get());
+                    return true;
+                } catch (Exception e) {
+                    log.error("", e);
+                }
             }
         }
 
-        return result;
-    }
-
-    @Override
-    @Transactional
-    public Optional<UsersEntity> getUserByUserName(String userName) {
-        return userRepository.findUsersEntityByUserName(userName);
+        return false;
     }
 
     @Override

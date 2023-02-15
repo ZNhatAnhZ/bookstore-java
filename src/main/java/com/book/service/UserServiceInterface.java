@@ -1,12 +1,12 @@
 package com.book.service;
 
+import com.book.dto.UserDTO;
 import com.book.model.UsersEntity;
 
 import java.util.Optional;
 
 public interface UserServiceInterface {
     Optional<UsersEntity> registerUser(UsersEntity usersEntity);
-    Optional<UsersEntity> updateUser(UsersEntity usersEntity);
-    Optional<UsersEntity> getUserByUserName(String userName);
+    Boolean changePassword(String authHeader, UserDTO userDTO);
     Optional<UsersEntity> getUserByJwtToken(String userName);
 }

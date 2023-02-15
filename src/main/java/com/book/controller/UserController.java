@@ -1,10 +1,8 @@
 package com.book.controller;
 
 import com.book.dto.UserDTO;
-import com.book.dto.JwtModel;
 import com.book.model.UsersEntity;
 import com.book.service.UserService;
-import com.book.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,24 +16,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final JwtUtils jwtUtils;
 
     @PostMapping ("/changePassword")
-    public ResponseEntity<String> changePassword(@RequestBody UserDTO userDTO) {
-        UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setPassword(userDTO.getPassword());
-        usersEntity.setUserName(jwtUtils.getUserNameFromJwtToken(userDTO.getJwt()));
-
-        if (userService.updateUser(usersEntity).isEmpty()) {
-            return new ResponseEntity<>("User failed to update", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> changePassword(@RequestHeader(name = "Authorization") String authHeader, @RequestBody UserDTO userDTO) {
+        if (Boolean.TRUE.equals(userService.changePassword(authHeader, userDTO))) {
+            return new ResponseEntity<>("User changed password successfully", HttpStatus.OK);
         }
-        return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
+        return new ResponseEntity<>("User failed to change password", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping ("/getUser")
-    public ResponseEntity<UsersEntity> getUser(@RequestBody JwtModel jwtModel) {
-        String username = jwtUtils.getUserNameFromJwtToken(jwtModel.getJwt());
-        Optional<UsersEntity> usersEntity = userService.getUserByUserName(username);
+    @GetMapping ("/getUser")
+    public ResponseEntity<UsersEntity> getUser(@RequestHeader(name = "Authorization") String authHeader) {
+        Optional<UsersEntity> usersEntity = userService.getUserByJwtToken(authHeader.substring(7));
 
         if (usersEntity.isPresent()) {
             return new ResponseEntity<>(usersEntity.get(), HttpStatus.OK);

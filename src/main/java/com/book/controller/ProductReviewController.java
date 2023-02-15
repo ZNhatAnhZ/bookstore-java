@@ -40,8 +40,8 @@ public class ProductReviewController {
     }
 
     @PostMapping("/addProductReview")
-    public ResponseEntity<String> addProductReview(@RequestBody ProductReviewDTO productReviewDTO) {
-        Boolean result = productReviewsService.saveProductReview(productReviewDTO);
+    public ResponseEntity<String> addProductReview(@RequestHeader(name = "Authorization") String authHeader, @RequestBody ProductReviewDTO productReviewDTO) {
+        Boolean result = productReviewsService.saveProductReview(authHeader, productReviewDTO);
 
         if (Boolean.TRUE.equals(result)) {
             return new ResponseEntity<>("adding a new product review successfully", HttpStatus.OK);

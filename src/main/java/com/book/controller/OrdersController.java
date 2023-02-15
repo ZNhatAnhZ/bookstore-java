@@ -1,6 +1,5 @@
 package com.book.controller;
 
-import com.book.dto.JwtModel;
 import com.book.dto.OrdersDTO;
 import com.book.service.OrdersService;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +16,16 @@ public class OrdersController {
     private final OrdersService ordersService;
 
     @PostMapping("/createByCart")
-    public ResponseEntity<String> createOrderByCart(@RequestBody JwtModel jwtModel) {
-        if (Boolean.TRUE.equals(ordersService.createOrderFromCart(jwtModel))) {
+    public ResponseEntity<String> createOrderByCart(@RequestHeader(name = "Authorization") String authHeader) {
+        if (Boolean.TRUE.equals(ordersService.createOrderFromCart(authHeader))) {
             return new ResponseEntity<>("Created order successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>("Failed to create a new order", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/createById")
-    public ResponseEntity<String> createOrderById(@RequestBody OrdersDTO ordersDTO) {
-        if (Boolean.TRUE.equals(ordersService.createOrderFromProductId(ordersDTO))) {
+    public ResponseEntity<String> createOrderById(@RequestHeader(name = "Authorization") String authHeader, @RequestBody OrdersDTO ordersDTO) {
+        if (Boolean.TRUE.equals(ordersService.createOrderFromProductId(authHeader, ordersDTO))) {
             return new ResponseEntity<>("Created order successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>("Failed to create a new order", HttpStatus.BAD_REQUEST);

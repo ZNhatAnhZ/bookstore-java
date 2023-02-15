@@ -43,9 +43,8 @@ public class ProductReviewsService implements ProductReviewsServiceInterface{
     }
 
     @Override
-    public Boolean saveProductReview(ProductReviewDTO productReviewDTO) {
-
-        Optional<UsersEntity> usersEntity = userService.getUserByUserName(jwtUtils.getUserNameFromJwtToken(productReviewDTO.getJwt()));
+    public Boolean saveProductReview(String authHeader, ProductReviewDTO productReviewDTO) {
+        Optional<UsersEntity> usersEntity = userService.getUserByJwtToken(authHeader.substring(7));
 
         if (usersEntity.isPresent()) {
             ProductReviewsEntity productReviewsEntity = new ProductReviewsEntity();
