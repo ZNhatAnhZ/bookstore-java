@@ -10,6 +10,7 @@ name: Java CI with Maven
 
 on:
   push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -17,8 +18,22 @@ jobs:
   tests:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_DATABASE: e-commerce
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - uses: actions/checkout@v3
+      - name: Create DB structure
+        run: |
+          mysql -h 127.0.0.1 --port 3306 -uroot -proot -e 'CREATE DATABASE IF NOT EXISTS `e-commerce`;'
+          mysql -h 127.0.0.1 --port 3306 -uroot -proot e-commerce < ecommerce_test.sql
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -27,12 +42,11 @@ jobs:
           distribution: 'adopt'
           cache: maven
 
-      - name: Create DB structure
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -h 127.0.0.1 --port 3306 -uroot -proot -e 'CREATE DATABASE IF NOT EXISTS ecommerce_test;'
-          mysql -h 127.0.0.1 --port 3306 -uroot -proot ecommerce_test < ecommerce_test.sql
+      - name: Build Maven
+        run: mvn -B package --file pom.xml -Dmaven.test.skip
 
-      - name: Build and test with Maven
-        run: mvn -B package --file pom.xml
+      - name: Run Spring
+        run: mvn spring-boot:run &
 
+      - name: Run all tests
+        run: mvn surefire:test

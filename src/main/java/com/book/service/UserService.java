@@ -50,8 +50,7 @@ public class UserService implements UserServiceInterface{
     public Boolean changePassword(String authHeader, UserDTO userDTO) {
         Optional<UsersEntity> usersEntity = getUserByJwtToken(authHeader.substring(7));
 
-        if(usersEntity.isPresent()){
-            if (passwordEncoder.matches(userDTO.getPassword(), usersEntity.get().getPassword())) {
+        if(usersEntity.isPresent() && passwordEncoder.matches(userDTO.getPassword(), usersEntity.get().getPassword())){
                 try {
                     usersEntity.get().setPassword(passwordEncoder.encode(userDTO.getNewPassword()));
                     userRepository.save(usersEntity.get());
@@ -59,7 +58,6 @@ public class UserService implements UserServiceInterface{
                 } catch (Exception e) {
                     log.error("", e);
                 }
-            }
         }
 
         return false;
