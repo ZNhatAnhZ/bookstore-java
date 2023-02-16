@@ -42,7 +42,6 @@ public class UserService implements UserServiceInterface{
         }
 
         return usersEntityOptional;
-
     }
 
     @Override
