@@ -116,11 +116,7 @@ public class ProductsService implements ProductsServiceInterface{
             return Optional.empty();
         }
 
-        List<RatingObjectDTO> ratingObjectDTOList = productReviewsEntityList.get().stream().map(productReviewsEntity -> new RatingObjectDTO(productReviewsEntity.getUsersEntity().getId(), productReviewsEntity.getProductId(), productReviewsEntity.getRating())).toList();
-
-        Map<List<Integer>, Double> averageRatingOfUserAndProduct = ratingObjectDTOList.stream().collect(Collectors.groupingBy(ratingObjectDTO -> List.of(ratingObjectDTO.getUserId(),ratingObjectDTO.getProductId()), Collectors.averagingInt(RatingObjectDTO::getRating)));
-
-        List<RatingObjectDTO> result = averageRatingOfUserAndProduct.entrySet().stream().map(e -> new RatingObjectDTO(e.getKey().get(0), e.getKey().get(1), e.getValue().intValue())).toList();
+        List<RatingObjectDTO> result = getRatingObjectDTO(productReviewsEntityList.get());
 
         ProcessBuilder pb = new ProcessBuilder(pythonInterpreter, pythonProgramLocation, result.toString(), String.valueOf(userId));
         Process p = pb.start();
@@ -128,6 +124,15 @@ public class ProductsService implements ProductsServiceInterface{
         BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
         List<Integer> productIdList = new ObjectMapper().readValue(in.readLine(), List.class);
         return Optional.of(productsRepository.findAllById(productIdList));
+    }
+
+    @Override
+    public List<RatingObjectDTO> getRatingObjectDTO(List<ProductReviewsEntity> productReviewsEntityList) {
+        List<RatingObjectDTO> ratingObjectDTOList = productReviewsEntityList.stream().map(productReviewsEntity -> new RatingObjectDTO(productReviewsEntity.getUsersEntity().getId(), productReviewsEntity.getProductId(), productReviewsEntity.getRating())).toList();
+
+        Map<List<Integer>, Double> averageRatingOfUserAndProduct = ratingObjectDTOList.stream().collect(Collectors.groupingBy(ratingObjectDTO -> List.of(ratingObjectDTO.getUserId(),ratingObjectDTO.getProductId()), Collectors.averagingInt(RatingObjectDTO::getRating)));
+
+        return averageRatingOfUserAndProduct.entrySet().stream().map(e -> new RatingObjectDTO(e.getKey().get(0), e.getKey().get(1), e.getValue().intValue())).toList();
     }
 
     @Override

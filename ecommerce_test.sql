@@ -32,7 +32,7 @@ CREATE TABLE `cart_items` (
   KEY `product_id_product` (`product_id`),
   CONSTRAINT `product_id_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_id_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -56,7 +56,7 @@ CREATE TABLE `category` (
   `id` int NOT NULL AUTO_INCREMENT,
   `category_name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (0,'Thiếu nhi'),(1,'Trinh thám'),(2,'Học tập - Giáo trình'),(3,'Tâm lí'),(4,'Kinh dị'),(5,'Công nghệ'),(6,'Văn học'),(7,'Kinh tế'),(8,'lmao'),(9,'lmaoaaa');
+INSERT INTO `category` VALUES (0,'Thiếu nhi'),(1,'Trinh thám'),(2,'Học tập - Giáo trình'),(3,'Tâm lí'),(4,'Kinh dị'),(5,'Công nghệ'),(6,'Văn học'),(7,'Kinh tế'),(8,'lmao'),(9,'lmaoaaa'),(14,'categoryName'),(15,'asca');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,8 +177,8 @@ CREATE TABLE `product_reviews` (
   KEY `user_id_review_idx` (`review_by`),
   KEY `product_id_review_idx` (`review_product_id`),
   CONSTRAINT `product_id_review` FOREIGN KEY (`review_product_id`) REFERENCES `products` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `user_id_review` FOREIGN KEY (`review_by`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=219 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `user_id_review` FOREIGN KEY (`review_by`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=221 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,11 +209,10 @@ CREATE TABLE `products` (
   `provider_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `category_id_idx` (`product_category`),
-  KEY `provider_id_idx` (`provider_id`),
+  KEY `provider_id` (`provider_id`),
   CONSTRAINT `category_id` FOREIGN KEY (`product_category`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FKq9h74911oq01wny2mmhtcpxmv` FOREIGN KEY (`provider_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `provider_id` FOREIGN KEY (`provider_id`) REFERENCES `shop` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=123 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `provider_id` FOREIGN KEY (`provider_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=145 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -294,7 +293,7 @@ CREATE TABLE `shop` (
   `revenue` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `shop_owner_id_user_idx` (`shop_owner_id`),
-  CONSTRAINT `shop_owner_id_user` FOREIGN KEY (`shop_owner_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `shop_owner_id_user` FOREIGN KEY (`shop_owner_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -321,7 +320,7 @@ CREATE TABLE `users` (
   `user_type` varchar(45) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -343,4 +342,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-20 11:15:55
+-- Dump completed on 2023-02-22 10:47:53

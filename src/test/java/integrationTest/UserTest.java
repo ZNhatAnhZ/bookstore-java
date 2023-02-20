@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.Response;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.http.HttpHeaders;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -96,7 +97,7 @@ public class UserTest {
         Response response = client
                 .target(url)
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtModel.getJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtModel.getJwt())
                 .post(Entity.entity(userDTO, MediaType.APPLICATION_JSON));
 
         if (testCaseId.equalsIgnoreCase("getCSVDataForChangePasswordSuccess")) {
@@ -113,7 +114,7 @@ public class UserTest {
         Response successResponse = client
                 .target(url)
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtModel.getJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtModel.getJwt())
                 .get();
 
         assertEquals(successResponse.getStatus(), 200);

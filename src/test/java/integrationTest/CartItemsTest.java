@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.http.HttpHeaders;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -59,7 +60,7 @@ public class CartItemsTest {
 
     public void getJwtToken() {
         String url = host + loginRoute;
-        testUsersEntity.setUserName("testuser");
+        testUsersEntity.setUserName("testUser");
         testUsersEntity.setPassword("newPassword");
 
         Response response = client
@@ -80,7 +81,7 @@ public class CartItemsTest {
         Response response = client
                 .target(url)
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtModel.getJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtModel.getJwt())
                 .get();
 
         testUsersEntity = response.readEntity(UsersEntity.class);
@@ -100,7 +101,7 @@ public class CartItemsTest {
         Response response = client
                 .target(url)
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtModel.getJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtModel.getJwt())
                 .post(Entity.entity(cartItemsDTO, MediaType.APPLICATION_JSON));
 
         if (testCaseId.equalsIgnoreCase("getCSVDataAddCartItemsSuccess")) {
@@ -117,7 +118,7 @@ public class CartItemsTest {
                 .target(url)
                 .queryParam("id", testUsersEntity.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtModel.getJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtModel.getJwt())
                 .get();
 
         cartItemsEntity = response.readEntity(new GenericType<List<CartItemsEntity>>() {}).get(0);
@@ -139,7 +140,7 @@ public class CartItemsTest {
         Response response = client
                 .target(url)
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtModel.getJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtModel.getJwt())
                 .post(Entity.entity(cartItemsDTO, MediaType.APPLICATION_JSON));
 
         if (testCaseId.equalsIgnoreCase("getCSVDataDeleteCartItemsSuccess")) {
@@ -156,7 +157,7 @@ public class CartItemsTest {
                 .target(url)
                 .queryParam("id", testUsersEntity.getId())
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtModel.getJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtModel.getJwt())
                 .get();
 
         List<CartItemsEntity> result = response.readEntity(new GenericType<List<CartItemsEntity>>() {});
@@ -175,7 +176,7 @@ public class CartItemsTest {
         Response response = client
                 .target(url)
                 .request(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + jwtModel.getJwt())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtModel.getJwt())
                 .post(Entity.entity(cartItemsDTO, MediaType.APPLICATION_JSON));
 
         assertNotEquals(response.getStatus(), 200);

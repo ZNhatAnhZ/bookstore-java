@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="All Test Suite">
-    <test verbose="2" preserve-order="true" name="C:/Users/NhatAnh/Desktop/IdeaProjects/bookstore">
+<suite name="All Test Suite" preserve-order="true">
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="UserTest">
         <classes>
             <class name="integrationTest.UserTest"></class>
             <class name="unitTest.UserTest"></class>
+        </classes>
+    </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="CartItemsTest">
+        <classes>
             <class name="integrationTest.CartItemsTest"></class>
             <class name="unitTest.CartItemsTest"></class>
+        </classes>
+    </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="ProductTest">
+        <classes>
+            <class name="integrationTest.ProductTest"></class>
+            <class name="unitTest.ProductTest"></class>
         </classes>
     </test>
 </suite>

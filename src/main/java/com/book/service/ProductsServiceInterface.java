@@ -1,6 +1,8 @@
 package com.book.service;
 
 import com.book.dto.NewProductDTO;
+import com.book.dto.RatingObjectDTO;
+import com.book.model.ProductReviewsEntity;
 import com.book.model.ProductsEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,8 @@ public interface ProductsServiceInterface {
 
     @Transactional
     Optional<List<ProductsEntity>> getRecommendedProducts(int userId) throws IOException;
+
+    List<RatingObjectDTO> getRatingObjectDTO(List<ProductReviewsEntity> productReviewsEntityList);
 
     @Transactional
     Optional<List<ProductsEntity>> findAllByUsersEntityId(int usersEntityId);
