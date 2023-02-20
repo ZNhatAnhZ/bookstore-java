@@ -19,4 +19,16 @@
             <class name="unitTest.ProductTest"></class>
         </classes>
     </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="CategoryTest">
+        <classes>
+            <class name="integrationTest.CategoryTest"></class>
+            <class name="unitTest.CategoryTest"></class>
+        </classes>
+    </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="ProductReviewTest">
+        <classes>
+            <class name="integrationTest.ProductReviewTest"></class>
+            <class name="unitTest.ProductReviewTest"></class>
+        </classes>
+    </test>
 </suite>
