@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [All Test Suite]" guice-stage="DEVELOPMENT">
+  <test thread-count="5" name="C:/Users/NhatAnh/Desktop/IdeaProjects/bookstore(failed)">
+    <classes>
+      <class name="integrationTest.UserTest">
+        <methods>
+          <include name="setUp"/>
+          <include name="getJwtTokenSuccessful"/>
+          <include name="sendChangePasswordRequestSuccessful"/>
+          <include name="sendChangePasswordRequestFailed"/>
+          <include name="getUserRequest"/>
+          <include name="sendRegistrationRequest"/>
+          <include name="getJwtTokenFailed"/>
+        </methods>
+      </class> <!-- integrationTest.UserTest -->
+    </classes>
+  </test> <!-- C:/Users/NhatAnh/Desktop/IdeaProjects/bookstore(failed) -->
+</suite> <!-- Failed suite [All Test Suite] -->
