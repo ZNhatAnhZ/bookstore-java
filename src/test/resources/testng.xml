@@ -11,6 +11,8 @@
         <classes>
             <class name="integrationTest.CartItemsTest"></class>
             <class name="unitTest.CartItemsTest"></class>
+            <class name="integrationTest.ProductTest"></class>
+            <class name="unitTest.ProductTest"></class>
         </classes>
     </test>
     <test verbose="2" preserve-order="true" group-by-instances="true" name="ProductTest">
