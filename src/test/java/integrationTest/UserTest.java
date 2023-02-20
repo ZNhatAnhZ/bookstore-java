@@ -2,19 +2,14 @@ package integrationTest;
 
 import com.book.dto.JwtModel;
 import com.book.dto.UserDTO;
-import com.book.model.UsersEntity;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import util.BaseAPIUtil;
-import util.TestUtil;
 
 import java.util.Properties;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
 
 public class UserTest extends BaseTest {
     private String registerRoute;
@@ -35,9 +30,7 @@ public class UserTest extends BaseTest {
         testUsersEntity.setUserName(prop.getProperty("userName"));
         testUsersEntity.setPassword(prop.getProperty("password"));
 
-        Response response =  BaseAPIUtil.sendPostRequest(url, "", testUsersEntity);
-
-        assertEquals(response.getStatus(), 200);
+        BaseAPIUtil.sendPostRequest(url, "", testUsersEntity, 200);
     }
 
     @Test(dependsOnMethods = {"sendRegistrationRequest"}, dataProvider = "getCSVDataForJwtToken")
@@ -47,13 +40,11 @@ public class UserTest extends BaseTest {
 
         testUsersEntity.setPassword(prop.getProperty("password"));
 
-        Response response =  BaseAPIUtil.sendPostRequest(url, "", testUsersEntity);
-
         if (testCaseId.equalsIgnoreCase("getCSVDataForJwtTokenSuccess")) {
+            Response response = BaseAPIUtil.sendPostRequest(url, "", testUsersEntity, 200);
             jwtModel = response.readEntity(JwtModel.class);
-            assertEquals(response.getStatus(), 200);
         } else {
-            assertNotEquals(response.getStatus(), 200);
+            BaseAPIUtil.sendPostRequest(url, "", testUsersEntity, 403);
         }
     }
 
@@ -66,22 +57,17 @@ public class UserTest extends BaseTest {
         userDTO.setPassword(prop.getProperty("password"));
         userDTO.setNewPassword(prop.getProperty("newPassword"));
 
-        Response response =  BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), userDTO);
-
         if (testCaseId.equalsIgnoreCase("getCSVDataForChangePasswordSuccess")) {
-            assertEquals(response.getStatus(), 200);
+            BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), userDTO, 200);
         } else {
-            assertNotEquals(response.getStatus(), 200);
+            BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), userDTO, 403);
         }
     }
 
     @Test(dependsOnMethods = {"sendRegistrationRequest"})
     public void getUserRequest() {
         String url = host + userGetUserRoute;
-
-        Response response =  BaseAPIUtil.sendGetRequest(url, jwtModel.getJwt(), new MultivaluedStringMap());
-
-        assertEquals(response.getStatus(), 200);
+        BaseAPIUtil.sendGetRequest(url, jwtModel.getJwt(), new MultivaluedStringMap(), 200);
     }
 
     @DataProvider(name = "getCSVDataForRegistration")

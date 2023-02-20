@@ -38,12 +38,10 @@ public class CartItemsTest extends BaseTest{
         Properties prop = loadCSVData(testCaseId);
         CartItemsDTO cartItemsDTO = new CartItemsDTO(Integer.parseInt(prop.getProperty("productId")), Integer.parseInt(prop.getProperty("quantity")));
 
-        Response response =  BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), cartItemsDTO);
-
         if (testCaseId.equalsIgnoreCase("getCSVDataAddCartItemsSuccess")) {
-            assertEquals(response.getStatus(), 200);
+            BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), cartItemsDTO, 200);
         } else {
-            assertNotEquals(response.getStatus(), 200);
+            BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), cartItemsDTO, 403);
         }
     }
 
@@ -53,10 +51,8 @@ public class CartItemsTest extends BaseTest{
         MultivaluedStringMap multivaluedStringMap = new MultivaluedStringMap();
         multivaluedStringMap.put("id", Collections.singletonList(String.valueOf(testUsersEntity.getId())));
 
-        Response response =  BaseAPIUtil.sendGetRequest(url, jwtModel.getJwt(), multivaluedStringMap);
-
+        Response response =  BaseAPIUtil.sendGetRequest(url, jwtModel.getJwt(), multivaluedStringMap, 200);
         cartItemsEntity = response.readEntity(new GenericType<List<CartItemsEntity>>() {}).get(0);
-        assertEquals(response.getStatus(), 200);
     }
 
     @Test(dependsOnMethods = {"getCartItems"}, dataProvider = "getCSVDataDeleteCartItems")
@@ -67,16 +63,10 @@ public class CartItemsTest extends BaseTest{
 
         if (testCaseId.equalsIgnoreCase("getCSVDataDeleteCartItemsSuccess")) {
             cartItemsDTO = new CartItemsDTO(cartItemsEntity.getId(), 0);
+            BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), cartItemsDTO, 200);
         } else {
             cartItemsDTO = new CartItemsDTO(Integer.parseInt(prop.getProperty("cartItemId")), 0);
-        }
-
-        Response response =  BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), cartItemsDTO);
-
-        if (testCaseId.equalsIgnoreCase("getCSVDataDeleteCartItemsSuccess")) {
-            assertEquals(response.getStatus(), 200);
-        } else {
-            assertNotEquals(response.getStatus(), 200);
+            BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), cartItemsDTO, 403);
         }
     }
 
@@ -86,10 +76,8 @@ public class CartItemsTest extends BaseTest{
         MultivaluedStringMap multivaluedStringMap = new MultivaluedStringMap();
         multivaluedStringMap.putSingle("id", String.valueOf(testUsersEntity.getId()));
 
-        Response response =  BaseAPIUtil.sendGetRequest(url, jwtModel.getJwt(), multivaluedStringMap);
-
+        Response response =  BaseAPIUtil.sendGetRequest(url, jwtModel.getJwt(), multivaluedStringMap, 200);
         List<CartItemsEntity> result = response.readEntity(new GenericType<List<CartItemsEntity>>() {});
-        assertEquals(response.getStatus(), 200);
         assertTrue(result.isEmpty());
     }
 
@@ -98,9 +86,7 @@ public class CartItemsTest extends BaseTest{
         String url = host + deleteCartItemsRoute;
         CartItemsDTO cartItemsDTO = new CartItemsDTO(cartItemsEntity.getId(), 0);
 
-        Response response =  BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), cartItemsDTO);
-
-        assertNotEquals(response.getStatus(), 200);
+        BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), cartItemsDTO, 403);
     }
 
     @DataProvider(name = "getCSVDataAddCartItems")

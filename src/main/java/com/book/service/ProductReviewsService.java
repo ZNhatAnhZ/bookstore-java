@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ProductReviewsService implements ProductReviewsServiceInterface{
     private final ProductReviewsRepository productReviewsRepository;
-    private final JwtUtils jwtUtils;
     private final UserService userService;
     @Override
     public Optional<List<ProductReviewsEntity>> findAllByProductId(int productsEntityId) {

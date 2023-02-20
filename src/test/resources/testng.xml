@@ -15,8 +15,35 @@
     </test>
     <test verbose="2" preserve-order="true" group-by-instances="true" name="ProductTest">
         <classes>
-            <class name="integrationTest.ProductTest"></class>
+            <class name="integrationTest.CreateProductTest"></class>
             <class name="unitTest.ProductTest"></class>
+        </classes>
+    </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="CategoryTest">
+        <classes>
+            <class name="integrationTest.CategoryTest"></class>
+            <class name="unitTest.CategoryTest"></class>
+        </classes>
+    </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="GetProductTest">
+        <classes>
+            <class name="integrationTest.GetProductTest"></class>
+        </classes>
+    </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="ModifyProductTest">
+        <classes>
+            <class name="integrationTest.ModifyProductTest"></class>
+        </classes>
+    </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="DeleteProductTest">
+        <classes>
+            <class name="integrationTest.DeleteProductTest"></class>
+        </classes>
+    </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="ProductReviewTest">
+        <classes>
+            <class name="integrationTest.ProductReviewTest"></class>
+            <class name="unitTest.ProductReviewTest"></class>
         </classes>
     </test>
 </suite>

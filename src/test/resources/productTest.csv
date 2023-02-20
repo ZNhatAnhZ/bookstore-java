@@ -12,5 +12,4 @@ getProductsByProviderIdSuccess,,,,,,,,,,,32
 getProductsByProviderIdFail,,,,,,,,,,,-1
 createProductSuccess,,,,categoryName,,productName,2,2,productPhoto,productDetails,
 modifyProductSuccess,,,,newCategory,,newProductName,1,1,newProductPhoto,newProductDetail,
-modifyProductFail,,,,newCategory,-1,newProductName,1,1,newProductPhoto,newProductDetail,
 deleteProductFail,,,,newCategory,-1,newProductName,1,1,newProductPhoto,newProductDetail,
