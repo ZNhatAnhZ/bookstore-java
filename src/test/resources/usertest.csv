@@ -4,4 +4,5 @@ getCSVDataForJwtTokenSuccess, testUser, testPassword,
 getCSVDataForJwtTokenFail, testUser, wrongPassword,
 getCSVDataForChangePasswordFail, testUser, wrongPassword, newPassword
 getCSVDataForChangePasswordSuccess, testUser, testPassword, newPassword
+getCSVDataForTestUser, testUser, newPassword
 

@@ -5,6 +5,8 @@
         <classes>
             <class name="integrationTest.UserTest"></class>
             <class name="unitTest.UserTest"></class>
+            <class name="integrationTest.CartItemsTest"></class>
+            <class name="unitTest.CartItemsTest"></class>
         </classes>
     </test>
 </suite>

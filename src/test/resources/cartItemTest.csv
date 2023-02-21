@@ -1,0 +1,6 @@
+testCaseId, productId, quantity, cartItemId
+getCSVDataAddCartItemsSuccess, 0, 0,
+getCSVDataAddCartItemsFail, -1, 0,
+getCSVDataDeleteCartItemsSuccess,,,,
+getCSVDataDeleteCartItemsFail, , , -1
+getCSVDataDeleteCartItemsWhenEmpty,,,,
