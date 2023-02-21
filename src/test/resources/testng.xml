@@ -13,6 +13,10 @@
             <class name="unitTest.CartItemsTest"></class>
             <class name="integrationTest.ProductTest"></class>
             <class name="unitTest.ProductTest"></class>
+            <class name="integrationTest.CartItemsTest"></class>
+            <class name="unitTest.CartItemsTest"></class>
+            <class name="integrationTest.ProductReviewTest"></class>
+            <class name="unitTest.ProductReviewTest"></class>
         </classes>
     </test>
     <test verbose="2" preserve-order="true" group-by-instances="true" name="ProductTest">
