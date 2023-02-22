@@ -11,12 +11,6 @@
         <classes>
             <class name="integrationTest.CartItemsTest"></class>
             <class name="unitTest.CartItemsTest"></class>
-            <class name="integrationTest.ProductTest"></class>
-            <class name="unitTest.ProductTest"></class>
-            <class name="integrationTest.CartItemsTest"></class>
-            <class name="unitTest.CartItemsTest"></class>
-            <class name="integrationTest.ProductReviewTest"></class>
-            <class name="unitTest.ProductReviewTest"></class>
         </classes>
     </test>
     <test verbose="2" preserve-order="true" group-by-instances="true" name="ProductTest">
@@ -52,4 +46,16 @@
             <class name="unitTest.ProductReviewTest"></class>
         </classes>
     </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="OrderTest">
+        <classes>
+            <class name="integrationTest.OrderTest"></class>
+            <class name="unitTest.OrderTest"></class>
+        </classes>
+    </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="OrderItemTest">
+        <classes>
+            <class name="unitTest.OrderItemTest"></class>
+        </classes>
+    </test>
+
 </suite>
