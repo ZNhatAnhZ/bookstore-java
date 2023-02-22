@@ -1,0 +1,16 @@
+testCaseId, page, size, sort, categoryName, productId, productName, productPrice, quantity, productPhoto, productDetails, userId
+getProductDefault,,,,,,,,,,,
+getProductNewest,,,newest,,,,,,,,
+getProductPrice_asc,,,price_asc,,,,,,,,
+getProductPrice_desc,,,price_desc,,,,,,,,
+getProductBest_seller,,,best_seller,,,,,,,,
+getProductsByCategoryFail,,,,-1,,,,,,,
+getProductByIdSuccess,,,,,0,,,,,,
+getProductByIdFail,,,,,-1,,,,,,
+getProductByName,,,,,,blockchain,,,,,
+getProductsByProviderIdSuccess,,,,,,,,,,,32
+getProductsByProviderIdFail,,,,,,,,,,,-1
+createProductSuccess,,,,categoryName,,productName,2,2,productPhoto,productDetails,
+modifyProductSuccess,,,,newCategory,,newProductName,1,1,newProductPhoto,newProductDetail,
+modifyProductFail,,,,newCategory,-1,newProductName,1,1,newProductPhoto,newProductDetail,
+deleteProductFail,,,,newCategory,-1,newProductName,1,1,newProductPhoto,newProductDetail,

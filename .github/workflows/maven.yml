@@ -55,5 +55,10 @@ jobs:
       - name: Run Spring
         run: mvn spring-boot:run &
 
+      - name: Sleep for 30 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '30s'
+
       - name: Run all tests
         run: mvn surefire:test
