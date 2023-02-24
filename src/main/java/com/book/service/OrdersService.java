@@ -6,6 +6,7 @@ import com.book.model.OrdersEntity;
 import com.book.model.ProductsEntity;
 import com.book.model.UsersEntity;
 import com.book.repository.OrdersRepository;
+import com.book.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class OrdersService implements OrdersServiceInterface{
     private final OrdersRepository ordersRepository;
+    private final JwtUtils jwtUtils;
     private final UserService userService;
     private final OrderItemsService orderItemsService;
     private final CartItemsService cartItemsService;
@@ -42,7 +44,7 @@ public class OrdersService implements OrdersServiceInterface{
 
             Optional<List<CartItemsEntity>> cartItemsEntityList = cartItemsService.getCartItemsEntitiesByUserId(usersEntity.get().getId());
 
-            if (cartItemsEntityList.isPresent() && !cartItemsEntityList.get().isEmpty()) {
+            if (cartItemsEntityList.isPresent()) {
                 AtomicInteger totalAmount = new AtomicInteger();
                 cartItemsEntityList.get().forEach(e-> totalAmount.addAndGet((e.getQuantity() * e.getProductsEntity().getProductPrice())));
 
