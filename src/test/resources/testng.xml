@@ -30,6 +30,11 @@
             <class name="integrationTest.GetProductTest"></class>
         </classes>
     </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="CreateProductTest">
+        <classes>
+            <class name="integrationTest.CreateProductTest"></class>
+        </classes>
+    </test>
     <test verbose="2" preserve-order="true" group-by-instances="true" name="ModifyProductTest">
         <classes>
             <class name="integrationTest.ModifyProductTest"></class>
