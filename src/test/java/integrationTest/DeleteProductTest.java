@@ -2,63 +2,56 @@ package integrationTest;
 
 import com.book.dto.NewProductDTO;
 import com.book.model.ProductsEntity;
-import jakarta.ws.rs.core.GenericType;
-import jakarta.ws.rs.core.Response;
+import factory.ModelFactory;
 import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import services.ProductService;
 import util.BaseAPIUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import static org.testng.Assert.*;
-import static org.testng.Assert.assertNotEquals;
 
 public class DeleteProductTest extends BaseTest{
+    private ProductService productService;
     private String getProductByIdRoute;
-    private String getProductsByProviderId;
     private String deleteProduct;
     private List<ProductsEntity> productsEntityList = new ArrayList<>();
 
     @BeforeClass
-    public void setUp() {
+    public void setUp1() throws IOException {
         getProductByIdRoute = properties.getProperty("getProductByIdRoute");
-        getProductsByProviderId = properties.getProperty("getProductsByProviderId");
         deleteProduct = properties.getProperty("deleteProduct");
         testCSVFile = "productTest.csv";
+        productService = new ProductService();
+    }
+
+    @BeforeClass(dependsOnMethods = {"setUp1"})
+    public void setUp2() {
+        Properties prop = loadCSVProductData();
+        productService.createProduct(ModelFactory.getNewProductDTO(prop));
+
+        productsEntityList = productService.getAllProductOfTestUser();
     }
 
     @Test
-    public void getProductsByProviderId() {
-        String url = host + getProductsByProviderId;
-        MultivaluedStringMap multivaluedStringMap = new MultivaluedStringMap();
-        multivaluedStringMap.put("providerId", Collections.singletonList(String.valueOf(testUsersEntity.getId())));
-
-        Response response =  BaseAPIUtil.sendGetRequest(url, jwtModel.getJwt(), multivaluedStringMap, 200);
-        productsEntityList = response.readEntity(new GenericType<List<ProductsEntity>>() {});
-    }
-
-    @Test(dependsOnMethods = {"getProductsByProviderId"})
     public void deleteProduct() {
-        String url = host + deleteProduct;
-
         NewProductDTO newProductDTO = new NewProductDTO();
         for(ProductsEntity products : productsEntityList) {
             newProductDTO.setProductId(products.getId());
-            Response response =  BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), newProductDTO, 200);
+            productService.deleteProduct(newProductDTO);
         }
     }
 
     @Test(dependsOnMethods = {"deleteProduct"})
     public void getEmptyProductsByProviderId() {
-        String url = host + getProductsByProviderId;
-        MultivaluedStringMap multivaluedStringMap = new MultivaluedStringMap();
-        multivaluedStringMap.put("providerId", Collections.singletonList(String.valueOf(testUsersEntity.getId())));
-
-        Response response =  BaseAPIUtil.sendGetRequest(url, jwtModel.getJwt(), multivaluedStringMap, 200);
-        assertTrue(response.readEntity(new GenericType<List<ProductsEntity>>() {}).isEmpty());
+        List<ProductsEntity> productsEntities = productService.getAllProductOfTestUser();
+        assertTrue(productsEntities.isEmpty());
     }
 
     @Test(dependsOnMethods = {"deleteProduct"})

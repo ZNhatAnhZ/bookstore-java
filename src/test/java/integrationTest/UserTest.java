@@ -2,6 +2,7 @@ package integrationTest;
 
 import com.book.dto.JwtModel;
 import com.book.dto.UserDTO;
+import factory.ModelFactory;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
 import org.testng.annotations.BeforeClass;
@@ -53,9 +54,7 @@ public class UserTest extends BaseTest {
         String url = host + userChangePasswordRoute;
         Properties prop = loadCSVData(testCaseId);
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setPassword(prop.getProperty("password"));
-        userDTO.setNewPassword(prop.getProperty("newPassword"));
+        UserDTO userDTO = ModelFactory.getUserDTO(prop);
 
         if (testCaseId.equalsIgnoreCase("getCSVDataForChangePasswordSuccess")) {
             BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), userDTO, 200);

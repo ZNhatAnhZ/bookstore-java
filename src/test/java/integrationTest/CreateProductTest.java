@@ -3,15 +3,18 @@ package integrationTest;
 import com.book.dto.NewProductDTO;
 import com.book.dto.ProductsDTO;
 import com.book.model.ProductsEntity;
-import jakarta.ws.rs.core.GenericType;
+import factory.ModelFactory;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import services.ProductService;
 import util.BaseAPIUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,33 +24,25 @@ import static org.testng.Assert.*;
 
 @Slf4j
 public class CreateProductTest extends BaseTest{
+    private ProductService productService;
     private String getProductByName;
-    private String getProductsByProviderId;
-    private String createProduct;
     private List<ProductsEntity> productsEntityList = new ArrayList<>();
     private NewProductDTO newProductDTO = new NewProductDTO();
 
     @BeforeClass
-    public void setUp() {
+    public void setUp() throws IOException {
+        productService = new ProductService();
         getProductByName = properties.getProperty("getProductByName");
-        getProductsByProviderId = properties.getProperty("getProductsByProviderId");
-        createProduct = properties.getProperty("createProduct");
         testCSVFile = "productTest.csv";
     }
 
     @Test(dataProvider = "createProductCSVData")
     public void createProduct(String testCaseId) {
-        String url = host + createProduct;
         Properties prop = loadCSVData(testCaseId);
 
-        newProductDTO.setCategoryName(prop.getProperty("categoryName"));
-        newProductDTO.setProductDetails(prop.getProperty("productDetails"));
-        newProductDTO.setProductName(prop.getProperty("productName"));
-        newProductDTO.setProductPrice(Integer.valueOf(prop.getProperty("productPrice")));
-        newProductDTO.setQuantity(Integer.valueOf(prop.getProperty("quantity")));
-        newProductDTO.setProductPhoto(prop.getProperty("productPhoto"));
+        newProductDTO = ModelFactory.getNewProductDTO(prop);
 
-        BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), newProductDTO, 200);
+        productService.createProduct(newProductDTO);
     }
 
     @Test(dependsOnMethods = {"createProduct"})
@@ -63,27 +58,22 @@ public class CreateProductTest extends BaseTest{
 
     @Test(dependsOnMethods = {"getProductByName"})
     public void getProductsByProviderId() {
-        String url = host + getProductsByProviderId;
-        MultivaluedStringMap multivaluedStringMap = new MultivaluedStringMap();
-        multivaluedStringMap.put("providerId", Collections.singletonList(String.valueOf(testUsersEntity.getId())));
-
-        Response response =  BaseAPIUtil.sendGetRequest(url, jwtModel.getJwt(), multivaluedStringMap, 200);
-        productsEntityList = response.readEntity(new GenericType<List<ProductsEntity>>() {});
+        productsEntityList = productService.getAllProductOfTestUser();
         assertTrue(verifyProductExistInAList(productsEntityList, newProductDTO));
+    }
+
+    @AfterClass
+    public void tearDown() {
+        for(ProductsEntity product : productsEntityList) {
+            NewProductDTO newProductDTO1 = new NewProductDTO();
+            newProductDTO1.setProductId(product.getId());
+            productService.deleteProduct(newProductDTO1);
+        }
     }
 
     private Boolean verifyProductExistInAList(List<ProductsEntity> productsEntityList, NewProductDTO newProductDTO) {
         for(ProductsEntity products : productsEntityList) {
-            NewProductDTO temp = new NewProductDTO();
-            newProductDTO.setProductId(null);
-            temp.setCategoryName(products.getCategoryEntity().getCategoryName());
-            temp.setProductDetails(products.getProductDetails());
-            temp.setProductName(products.getProductName());
-            temp.setProductPrice(products.getProductPrice());
-            temp.setQuantity(products.getQuantity());
-            temp.setProductPhoto(products.getProductPhoto());
-
-            if (temp.equals(newProductDTO)) {
+            if (newProductDTO.equals(products)) {
                 return true;
             }
         }
@@ -92,6 +82,6 @@ public class CreateProductTest extends BaseTest{
 
     @DataProvider(name = "createProductCSVData")
     public Object[][] createProductCSVData() {
-        return new Object[][]{{"createProductSuccess"}};
+        return new Object[][]{{"createProduct"}};
     }
 }
