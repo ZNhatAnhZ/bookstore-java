@@ -1,17 +1,14 @@
-package com.book.service;
+package com.book.security;
 
 import com.book.model.UsersEntity;
 import com.book.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -21,10 +18,10 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UsersEntity> usersEntity = userRepository.findUsersEntityByUserName(username);
         if (usersEntity.isPresent()) {
-            return new User(usersEntity.get().getUserName(), usersEntity.get().getPassword(), new ArrayList<>());
+            return new UserDetailsImpl(usersEntity.get());
         } else {
             throw new UsernameNotFoundException("User Not Found with -> username or email: " + username);
         }

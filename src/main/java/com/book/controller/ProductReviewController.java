@@ -2,7 +2,7 @@ package com.book.controller;
 
 import com.book.dto.ProductReviewDTO;
 import com.book.model.ProductReviewsEntity;
-import com.book.service.ProductReviewsService;
+import com.book.service.impl.ProductReviewsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

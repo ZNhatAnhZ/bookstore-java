@@ -4,9 +4,9 @@ import com.book.dto.CartItemsDTO;
 import com.book.model.ProductsEntity;
 import com.book.model.UsersEntity;
 import com.book.repository.CartItemsRepository;
-import com.book.service.CartItemsService;
-import com.book.service.ProductsService;
-import com.book.service.UserService;
+import com.book.service.impl.CartItemsService;
+import com.book.service.impl.ProductsService;
+import com.book.service.impl.UserService;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

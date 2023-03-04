@@ -1,10 +1,13 @@
 package com.book.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users", schema = "e-commerce", catalog = "")
@@ -26,4 +29,10 @@ public class UsersEntity {
     @Basic
     @Column(name = "password")
     private String password;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn (name = "role_id"))
+    private Set<RolesEntity> roles = new HashSet<>();
 }

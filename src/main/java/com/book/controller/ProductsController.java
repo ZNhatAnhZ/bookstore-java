@@ -3,7 +3,7 @@ package com.book.controller;
 import com.book.dto.NewProductDTO;
 import com.book.dto.ProductsDTO;
 import com.book.model.ProductsEntity;
-import com.book.service.ProductsService;
+import com.book.service.impl.ProductsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -3,7 +3,7 @@ package unitTest;
 import com.book.dto.UserDTO;
 import com.book.model.UsersEntity;
 import com.book.repository.UserRepository;
-import com.book.service.UserService;
+import com.book.service.impl.UserService;
 import com.book.util.JwtUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.testng.annotations.BeforeClass;

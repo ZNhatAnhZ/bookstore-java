@@ -1,4 +1,4 @@
-package com.book.service;
+package com.book.service.impl;
 
 import com.book.dto.RatingObjectDTO;
 import com.book.dto.NewProductDTO;
@@ -7,6 +7,7 @@ import com.book.model.ProductReviewsEntity;
 import com.book.model.ProductsEntity;
 import com.book.model.UsersEntity;
 import com.book.repository.ProductsRepository;
+import com.book.service.ProductsServiceInterface;
 import com.book.util.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-public class ProductsService implements ProductsServiceInterface{
+public class ProductsService implements ProductsServiceInterface {
     private final ProductsRepository productsRepository;
     private final CategoryService categoryService;
     private final ProductReviewsService productReviewsService;

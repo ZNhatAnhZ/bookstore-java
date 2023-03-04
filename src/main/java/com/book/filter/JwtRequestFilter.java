@@ -1,22 +1,25 @@
 package com.book.filter;
 
-import com.book.service.MyUserDetailsService;
+import com.book.security.MyUserDetailsService;
+import com.book.security.UserDetailsImpl;
 import com.book.util.JwtUtils;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -37,11 +40,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if (username != null && jwtUtils.validateJwtToken(jwt)) {
-            UserDetails userDetails = myUserDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            UserDetailsImpl userDetails = myUserDetailsService.loadUserByUsername(username);
 
+            List<String> roles = jwtUtils.getClaims(jwt);
+            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            for(String role : roles) {
+                SimpleGrantedAuthority simp = new SimpleGrantedAuthority(role);
+                authorities.add(simp);
+            }
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, authorities);
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
             log.error("Invalid jwt token or wrong credential");
@@ -49,4 +59,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
 }

@@ -1,4 +1,4 @@
-package com.book.service;
+package com.book.service.impl;
 
 import com.book.dto.OrdersDTO;
 import com.book.model.CartItemsEntity;
@@ -6,6 +6,7 @@ import com.book.model.OrdersEntity;
 import com.book.model.ProductsEntity;
 import com.book.model.UsersEntity;
 import com.book.repository.OrdersRepository;
+import com.book.service.OrdersServiceInterface;
 import com.book.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-public class OrdersService implements OrdersServiceInterface{
+public class OrdersService implements OrdersServiceInterface {
     private final OrdersRepository ordersRepository;
     private final JwtUtils jwtUtils;
     private final UserService userService;
