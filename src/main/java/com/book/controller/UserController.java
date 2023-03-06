@@ -2,7 +2,7 @@ package com.book.controller;
 
 import com.book.dto.UserDTO;
 import com.book.model.UsersEntity;
-import com.book.service.UserService;
+import com.book.service.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,10 +1,11 @@
-package com.book.service;
+package com.book.service.impl;
 
 import com.book.dto.CartItemsDTO;
 import com.book.model.CartItemsEntity;
 import com.book.model.ProductsEntity;
 import com.book.model.UsersEntity;
 import com.book.repository.CartItemsRepository;
+import com.book.service.CartItemsServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-public class CartItemsService implements CartItemsServiceInterface{
+public class CartItemsService implements CartItemsServiceInterface {
     private final CartItemsRepository cartItemsRepository;
     private final UserService userService;
     private final ProductsService productsService;

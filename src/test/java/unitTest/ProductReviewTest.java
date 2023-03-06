@@ -4,8 +4,8 @@ import com.book.dto.ProductReviewDTO;
 import com.book.model.ProductReviewsEntity;
 import com.book.model.UsersEntity;
 import com.book.repository.ProductReviewsRepository;
-import com.book.service.ProductReviewsService;
-import com.book.service.UserService;
+import com.book.service.impl.ProductReviewsService;
+import com.book.service.impl.UserService;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

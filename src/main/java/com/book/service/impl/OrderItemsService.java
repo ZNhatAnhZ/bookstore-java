@@ -1,4 +1,4 @@
-package com.book.service;
+package com.book.service.impl;
 
 import com.book.exception.InvalidQuantityException;
 import com.book.model.CartItemsEntity;
@@ -6,6 +6,7 @@ import com.book.model.OrderItemsEntity;
 import com.book.model.OrdersEntity;
 import com.book.model.ProductsEntity;
 import com.book.repository.OrderItemsRepository;
+import com.book.service.OrderItemsServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-public class OrderItemsService implements OrderItemsServiceInterface{
+public class OrderItemsService implements OrderItemsServiceInterface {
     private final OrderItemsRepository orderItemsRepository;
     private final CartItemsService cartItemsService;
     @Override

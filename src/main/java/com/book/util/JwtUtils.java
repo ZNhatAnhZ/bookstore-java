@@ -1,9 +1,12 @@
 package com.book.util;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import com.book.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.*;
@@ -16,8 +19,13 @@ public class JwtUtils {
     @Value("${jwtExpiration}")
     private int jwtExpiration;
 
-    public String generateJwtToken(UserDetails userDetails) {
+    public String generateJwtToken(UserDetailsImpl userDetails) {
         return Jwts.builder()
+                .claim("roles", userDetails.getAuthorities()
+                        .stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList())
+                )
                 .setSubject((userDetails.getUsername()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpiration))
@@ -26,7 +34,7 @@ public class JwtUtils {
     }
 
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+        return this.parseClaims(token).getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {
@@ -38,5 +46,15 @@ public class JwtUtils {
         }
 
         return false;
+    }
+
+    public Claims parseClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+    public List<String> getClaims(String token) {
+        return parseClaims(token).get("roles", List.class);
     }
 }

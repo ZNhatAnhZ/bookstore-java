@@ -1,8 +1,9 @@
-package com.book.service;
+package com.book.service.impl;
 
 import com.book.dto.UserDTO;
 import com.book.model.UsersEntity;
 import com.book.repository.UserRepository;
+import com.book.service.UserServiceInterface;
 import com.book.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-public class UserService implements UserServiceInterface{
+public class UserService implements UserServiceInterface {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;

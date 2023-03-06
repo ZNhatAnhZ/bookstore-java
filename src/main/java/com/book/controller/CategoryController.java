@@ -1,7 +1,7 @@
 package com.book.controller;
 
 import com.book.model.CategoryEntity;
-import com.book.service.CategoryService;
+import com.book.service.impl.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

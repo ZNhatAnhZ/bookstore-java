@@ -1,15 +1,14 @@
-package com.book.service;
+package com.book.service.impl;
 
 import com.book.dto.ProductReviewDTO;
 import com.book.model.ProductReviewsEntity;
 import com.book.model.UsersEntity;
 import com.book.repository.ProductReviewsRepository;
-import com.book.util.JwtUtils;
+import com.book.service.ProductReviewsServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ProductReviewsService implements ProductReviewsServiceInterface{
+public class ProductReviewsService implements ProductReviewsServiceInterface {
     private final ProductReviewsRepository productReviewsRepository;
     private final UserService userService;
     @Override
