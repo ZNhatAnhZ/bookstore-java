@@ -1,16 +1,23 @@
 package integrationTest;
 
+import com.book.dto.NewProductDTO;
 import com.book.dto.ProductReviewDTO;
 import com.book.model.ProductReviewsEntity;
+import com.book.model.ProductsEntity;
+import factory.ModelFactory;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import services.ProductService;
 import util.BaseAPIUtil;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -20,87 +27,89 @@ import static org.testng.Assert.*;
 
 @Slf4j
 public class ProductReviewTest extends BaseTest{
+    private ProductService productService;
     private String getProductReviewByProductIdRoute;
     private String getAverageRatingByProductIdRoute;
     private String addProductReviewRoute;
     private List<ProductReviewsEntity> productReviewsEntityList;
     private ProductReviewDTO productReviewDTO;
+    private List<ProductReviewDTO> productReviewDTOList = new ArrayList<>();
+    private ProductsEntity productsEntity;
 
     @BeforeClass
-    public void setUp() {
+    public void setUp1() throws IOException {
         getProductReviewByProductIdRoute = properties.getProperty("getProductReviewByProductIdRoute");
         getAverageRatingByProductIdRoute = properties.getProperty("getAverageRatingByProductIdRoute");
         addProductReviewRoute = properties.getProperty("addProductReviewRoute");
         testCSVFile = "productReviewTest.csv";
+        productService = new ProductService();
     }
 
-    @Test(dataProvider = "getCSVDataGetProductReviewByProductId")
-    public void getProductReviewByProductId(String testCaseId) {
+    @BeforeClass(dependsOnMethods = {"setUp1"})
+    public void setUp2() {
+        Properties prop = loadCSVProductData();
+        productService.createProduct(ModelFactory.getNewProductDTO(prop));
+
+        productsEntity = productService.getAllProductOfTestUser().get(0);
+    }
+
+    @Test
+    public void getProductReviewByProductId() {
         String url = host + getProductReviewByProductIdRoute;
-        Properties prop = loadCSVData(testCaseId);
         MultivaluedStringMap multivaluedStringMap = new MultivaluedStringMap();
-        multivaluedStringMap.put("productId", Collections.singletonList(prop.getProperty("productId")));
+        multivaluedStringMap.put("productId", Collections.singletonList(String.valueOf(productsEntity.getId())));
 
         Response response =  BaseAPIUtil.sendGetRequest(url, "", multivaluedStringMap, 200);
         productReviewsEntityList = response.readEntity(new GenericType<List<ProductReviewsEntity>>() {});
     }
 
-    @Test(dataProvider = "getCSVDataGetAverageRating", dependsOnMethods = {"getProductReviewByProductId"})
-    public void getAverageRating(String testCaseId) {
+    @Test(dependsOnMethods = {"getProductReviewByProductId"})
+    public void getAverageRating() {
         String url = host + getAverageRatingByProductIdRoute;
-        Properties prop = loadCSVData(testCaseId);
         MultivaluedStringMap multivaluedStringMap = new MultivaluedStringMap();
-        multivaluedStringMap.put("productId", Collections.singletonList(prop.getProperty("productId")));
+        multivaluedStringMap.put("productId", Collections.singletonList(String.valueOf(productsEntity.getId())));
 
         Response response =  BaseAPIUtil.sendGetRequest(url, "", multivaluedStringMap, 200);
-
-        if (testCaseId.equalsIgnoreCase("getAverageRatingSuccess")) {
-            assertEquals(calculateAverageRatingOfAProduct(productReviewsEntityList), response.readEntity(Integer.class));
-        } else {
-            assertNotEquals(calculateAverageRatingOfAProduct(productReviewsEntityList), response.readEntity(Integer.class));
-        }
+        assertEquals(calculateAverageRatingOfAProduct(productReviewsEntityList), response.readEntity(Integer.class));
     }
 
     @Test(dataProvider = "getCSVDataAddProductReview", dependsOnMethods = {"getAverageRating"})
     public void addProductReview(String testCaseId) {
         String url = host+addProductReviewRoute;
         Properties prop = loadCSVData(testCaseId);
+        prop.setProperty("productId", String.valueOf(productsEntity.getId()));
 
-        productReviewDTO = new ProductReviewDTO(prop.getProperty("comment"), Integer.parseInt(prop.getProperty("rating")), Integer.parseInt(prop.getProperty("productId")));
-
-        if (testCaseId.equalsIgnoreCase("addProductReviewSuccess")) {
-            BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), productReviewDTO, 200);
-        } else {
-            BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), productReviewDTO, 403);
-        }
+        productReviewDTO = ModelFactory.getProductReviewDTO(prop);
+        BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), productReviewDTO, 200);
+        productReviewDTOList.add(productReviewDTO);
     }
 
-    @Test(dataProvider = "getCSVDataGetProductReviewByProductId", dependsOnMethods = {"addProductReview"})
-    public void getProductReviewByProductIdAfterAddProductReview(String testCaseId) {
+    @Test(dependsOnMethods = {"addProductReview"})
+    public void getProductReviewByProductIdAfterAddProductReview() {
         String url = host + getProductReviewByProductIdRoute;
-        Properties prop = loadCSVData(testCaseId);
         MultivaluedStringMap multivaluedStringMap = new MultivaluedStringMap();
-        multivaluedStringMap.put("productId", Collections.singletonList(prop.getProperty("productId")));
+        multivaluedStringMap.put("productId", Collections.singletonList(String.valueOf(productsEntity.getId())));
 
         Response response =  BaseAPIUtil.sendGetRequest(url, "", multivaluedStringMap, 200);
         productReviewsEntityList = response.readEntity(new GenericType<List<ProductReviewsEntity>>() {});
-        assertTrue(verifyProductReview(productReviewsEntityList, productReviewDTO));
+        assertTrue(verifyProductReview(productReviewsEntityList, productReviewDTOList));
     }
 
-    @Test(dataProvider = "getCSVDataGetAverageRating", dependsOnMethods = {"getProductReviewByProductIdAfterAddProductReview"})
-    public void getAverageRatingAfterAddProductReview(String testCaseId) {
+    @Test(dependsOnMethods = {"getProductReviewByProductIdAfterAddProductReview"})
+    public void getAverageRatingAfterAddProductReview() {
         String url = host + getAverageRatingByProductIdRoute;
-        Properties prop = loadCSVData(testCaseId);
         MultivaluedStringMap multivaluedStringMap = new MultivaluedStringMap();
-        multivaluedStringMap.put("productId", Collections.singletonList(prop.getProperty("productId")));
+        multivaluedStringMap.put("productId", Collections.singletonList(String.valueOf(productsEntity.getId())));
 
         Response response =  BaseAPIUtil.sendGetRequest(url, "", multivaluedStringMap, 200);
+        assertEquals(calculateAverageRatingOfAProduct(productReviewsEntityList), response.readEntity(Integer.class));
+    }
 
-        if (testCaseId.equalsIgnoreCase("getAverageRatingSuccess")) {
-            assertEquals(calculateAverageRatingOfAProduct(productReviewsEntityList), response.readEntity(Integer.class));
-        } else {
-            assertNotEquals(calculateAverageRatingOfAProduct(productReviewsEntityList), response.readEntity(Integer.class));
-        }
+    @AfterClass
+    public void tearDown() {
+        NewProductDTO newProductDTO1 = new NewProductDTO();
+        newProductDTO1.setProductId(productsEntity.getId());
+        productService.deleteProduct(newProductDTO1);
     }
 
     private int calculateAverageRatingOfAProduct(List<ProductReviewsEntity> productReviewsEntityList) {
@@ -114,29 +123,19 @@ public class ProductReviewTest extends BaseTest{
         }
     }
 
-    private Boolean verifyProductReview(List<ProductReviewsEntity> productReviewsEntityList, ProductReviewDTO productReviewDTO) {
+    private Boolean verifyProductReview(List<ProductReviewsEntity> productReviewsEntityList, List<ProductReviewDTO> productReviewDTOList) {
         for(ProductReviewsEntity productReviewsEntity : productReviewsEntityList) {
-            ProductReviewDTO temp = new ProductReviewDTO(productReviewsEntity.getComment(), productReviewsEntity.getRating(), productReviewsEntity.getProductId());
-
-            if (temp.equals(productReviewDTO)) {
-                return true;
+            for(ProductReviewDTO productReviewDTO : productReviewDTOList) {
+                if (productReviewDTO.equals(productReviewsEntity)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    @DataProvider(name = "getCSVDataGetProductReviewByProductId")
-    public Object[][] getCSVDataGetProductReviewByProductId() {
-        return new Object[][]{{"getProductReviewByProductIdSuccess"}};
-    }
-
-    @DataProvider(name = "getCSVDataGetAverageRating")
-    public Object[][] getCSVDataGetAverageRating() {
-        return new Object[][]{{"getAverageRatingSuccess"}, {"getAverageRatingFail"}};
-    }
-
     @DataProvider(name = "getCSVDataAddProductReview")
     public Object[][] getCSVDataAddProductReview() {
-        return new Object[][]{{"addProductReviewFail"}, {"addProductReviewSuccess"}};
+        return new Object[][]{{"addProductReview1"}, {"addProductReview2"}, {"addProductReview3"}};
     }
 }

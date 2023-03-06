@@ -2,14 +2,17 @@ package integrationTest;
 
 import com.book.dto.NewProductDTO;
 import com.book.model.ProductsEntity;
-import jakarta.ws.rs.core.GenericType;
+import factory.ModelFactory;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.internal.util.collection.MultivaluedStringMap;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import services.ProductService;
 import util.BaseAPIUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,46 +21,34 @@ import java.util.Properties;
 import static org.testng.Assert.*;
 
 public class ModifyProductTest extends BaseTest{
+    private ProductService productService;
     private String getProductByIdRoute;
-    private String getProductsByProviderId;
-    private String modifyProduct;
     private List<ProductsEntity> productsEntityList = new ArrayList<>();
     private NewProductDTO newProductDTO = new NewProductDTO();
 
     @BeforeClass
-    public void setUp() {
+    public void setUp1() throws IOException {
         getProductByIdRoute = properties.getProperty("getProductByIdRoute");
-        getProductsByProviderId = properties.getProperty("getProductsByProviderId");
-        modifyProduct = properties.getProperty("modifyProduct");
         testCSVFile = "productTest.csv";
+        productService = new ProductService();
     }
 
-    @Test
-    public void getProductsByProviderId() {
-        String url = host + getProductsByProviderId;
-        MultivaluedStringMap multivaluedStringMap = new MultivaluedStringMap();
-        multivaluedStringMap.put("providerId", Collections.singletonList(String.valueOf(testUsersEntity.getId())));
+    @BeforeClass(dependsOnMethods = {"setUp1"})
+    public void setUp2() {
+        Properties prop = loadCSVProductData();
+        productService.createProduct(ModelFactory.getNewProductDTO(prop));
 
-        Response response =  BaseAPIUtil.sendGetRequest(url, jwtModel.getJwt(), multivaluedStringMap, 200);
-        productsEntityList = response.readEntity(new GenericType<List<ProductsEntity>>() {});
+        productsEntityList = productService.getAllProductOfTestUser();
     }
 
-    @Test(dataProvider = "modifyProductCSVData", dependsOnMethods = {"getProductsByProviderId"})
+    @Test(dataProvider = "modifyProductCSVData")
     public void modifyProduct(String testCaseId) {
-        String url = host + modifyProduct;
         Properties prop = loadCSVData(testCaseId);
-
-        newProductDTO = new NewProductDTO();
-        newProductDTO.setCategoryName(prop.getProperty("categoryName"));
-        newProductDTO.setProductDetails(prop.getProperty("productDetails"));
-        newProductDTO.setProductName(prop.getProperty("productName"));
-        newProductDTO.setProductPrice(Integer.valueOf(prop.getProperty("productPrice")));
-        newProductDTO.setQuantity(Integer.valueOf(prop.getProperty("quantity")));
-        newProductDTO.setProductPhoto(prop.getProperty("productPhoto"));
+        newProductDTO = ModelFactory.getNewProductDTO(prop);
 
         for(ProductsEntity products : productsEntityList) {
             newProductDTO.setProductId(products.getId());
-            Response response =  BaseAPIUtil.sendPostRequest(url, jwtModel.getJwt(), newProductDTO, 200);
+            productService.modifyProduct(newProductDTO);
         }
     }
 
@@ -74,18 +65,17 @@ public class ModifyProductTest extends BaseTest{
         }
     }
 
+    @AfterClass
+    public void tearDown() {
+        for(ProductsEntity product : productsEntityList) {
+            NewProductDTO newProductDTO1 = new NewProductDTO();
+            newProductDTO1.setProductId(product.getId());
+            productService.deleteProduct(newProductDTO1);
+        }
+    }
+
     private Boolean verifyProductInfo(ProductsEntity productsEntity, NewProductDTO newProductDTO) {
-        NewProductDTO temp = new NewProductDTO();
-
-        newProductDTO.setProductId(null);
-        temp.setCategoryName(productsEntity.getCategoryEntity().getCategoryName());
-        temp.setProductDetails(productsEntity.getProductDetails());
-        temp.setProductName(productsEntity.getProductName());
-        temp.setProductPrice(productsEntity.getProductPrice());
-        temp.setQuantity(productsEntity.getQuantity());
-        temp.setProductPhoto(productsEntity.getProductPhoto());
-
-        return temp.equals(newProductDTO);
+        return newProductDTO.equals(productsEntity);
     }
     @DataProvider(name = "modifyProductCSVData")
     public Object[][] modifyProductCSVData() {

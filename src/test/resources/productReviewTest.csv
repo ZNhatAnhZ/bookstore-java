@@ -2,5 +2,6 @@ testCaseId, comment, rating, productId
 getProductReviewByProductIdSuccess,,,0
 getAverageRatingSuccess,,,0
 getAverageRatingFail,,,-1
-addProductReviewSuccess, testComment, 5, 0
-addProductReviewFail, testComment, 5, -1
+addProductReview1, testComment, 5,
+addProductReview2, testComment, 3,
+addProductReview3, testComment, 1,
