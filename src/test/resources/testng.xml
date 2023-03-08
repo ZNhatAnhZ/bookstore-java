@@ -51,4 +51,16 @@
             <class name="unitTest.ProductReviewTest"></class>
         </classes>
     </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="OrderTest">
+        <classes>
+            <class name="integrationTest.OrderTest"></class>
+            <class name="unitTest.OrderTest"></class>
+        </classes>
+    </test>
+    <test verbose="2" preserve-order="true" group-by-instances="true" name="OrderItemTest">
+        <classes>
+            <class name="unitTest.OrderItemTest"></class>
+        </classes>
+    </test>
+
 </suite>
